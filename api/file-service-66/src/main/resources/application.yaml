@@ -4,3 +4,14 @@ server:
     uri-encoding: utf-8
 #    请求大小不限制
     max-swallow-size: -1
+    
+spring:
+  application:
+    name: file-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos
+        ip: 127.0.0.1  # 强制指定注册IP

@@ -12,6 +12,7 @@
         <module>cloudchat-common</module>
         <module>cloudchat-pojo</module>
         <module>api</module>
+        <module>gateway-1000</module>
     </modules>
 
     <properties>

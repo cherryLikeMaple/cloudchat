@@ -1,0 +1,56 @@
+server:
+  port: 1000
+  tomcat:
+    uri-encoding: utf-8
+    #    请求大小不限制
+    max-swallow-size: -1
+
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 5379
+      database: 0
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos
+        ip: 127.0.0.1  # 强制指定注册IP
+    gateway:
+      discovery:
+        locator:
+          enabled: true # 动态路由, 从注册中心根据微服务的名称获得目标节点地址
+      routes:
+        - id: authRoute  # 每一项路由规则都有一个唯一的id
+          uri: lb://auth-service
+          predicates:
+            - Path=
+        - id: fileRoute  # 每一项路由规则都有一个唯一的id
+          uri: lb://file-service
+          predicates:
+            - Path=
+        - id: mainRoute  # 每一项路由规则都有一个唯一的id
+          uri: lb://main-service
+          predicates:
+            - Path=
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+            allowCredentials: true
+            
+
+
+
+
+
+logging:
+  level:
+    root: info
+      
