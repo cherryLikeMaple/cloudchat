@@ -1,0 +1,6 @@
+server:
+  port: 8077
+  tomcat:
+    uri-encoding: utf-8
+#    请求大小不限制
+    max-swallow-size: -1
