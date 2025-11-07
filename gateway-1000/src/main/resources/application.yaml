@@ -28,15 +28,15 @@ spring:
         - id: authRoute  # 每一项路由规则都有一个唯一的id
           uri: lb://auth-service
           predicates:
-            - Path=
+            - Path=/auth/**
         - id: fileRoute  # 每一项路由规则都有一个唯一的id
           uri: lb://file-service
           predicates:
-            - Path=
+            - Path=/file/**
         - id: mainRoute  # 每一项路由规则都有一个唯一的id
           uri: lb://main-service
           predicates:
-            - Path=
+            - Path=/main/**
       globalcors:
         cors-configurations:
           '[/**]':
@@ -44,10 +44,6 @@ spring:
             allowedHeaders: "*"
             allowedMethods: "*"
             allowCredentials: true
-            
-
-
-
 
 
 logging:

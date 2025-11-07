@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author cherry
  */
-@RequestMapping
-@RestController("/file")
+@RestController
+@RequestMapping(("/file"))
 public class Health {
     
     @GetMapping("/health")
