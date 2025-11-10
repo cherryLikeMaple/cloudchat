@@ -2,10 +2,20 @@ server:
   port: 8088
   tomcat:
     uri-encoding: utf-8
-#    请求大小不限制
+    #    请求大小不限制
     max-swallow-size: -1
-    
+
 spring:
+  data:
+    redis:
+      host: localhost
+      port: 5379
+      database: 0
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:4406/cloudchat
+    username: root
+    password: root
   application:
     name: auth-service
   cloud:
@@ -18,4 +28,21 @@ spring:
 logging:
   level:
     root: info
-      
+  
+  # application.yml 文件
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'auth-service'
+      paths-to-match: '/**'
+      packages-to-scan: com.cherry.controller
+knife4j:
+  enable: false
+  setting:
+    language: zh_cn

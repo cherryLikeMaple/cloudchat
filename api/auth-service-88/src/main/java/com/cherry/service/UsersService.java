@@ -1,0 +1,57 @@
+package com.cherry.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.cherry.pojo.Users;
+import com.cherry.vo.UserVo;
+import jakarta.servlet.http.HttpServletRequest;
+
+/**
+ * <p>
+ * 用户表 服务类
+ * </p>
+ *
+ * @author cherry
+ * @since 2025-11-09
+ */
+public interface UsersService extends IService<Users> {
+
+    
+
+    /**
+     * 用户登录
+     * @param account
+     * @param password
+     * @param checkPassword
+     * @return
+     */
+    long userRegister(String account, String password, String checkPassword);
+
+    /**
+     * 用户登录
+     * @param account
+     * @param password
+     * @return
+     */
+    UserVo userLogin(String account, String password);
+
+    /**
+     * entity 转 vo
+     * @param user
+     * @return
+     */
+    UserVo getUserVo(Users user);
+
+    /**
+     * 获取当前登录的用户
+     * @param request
+     * @return
+     */
+    Users getLoginUser(HttpServletRequest request);
+
+    /**
+     * 用户注销
+     * @param request
+     * @return
+     */
+    boolean logout(HttpServletRequest request);
+}
