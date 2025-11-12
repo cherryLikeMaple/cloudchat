@@ -88,4 +88,5 @@ public class PassportController {
         boolean result = usersService.logout(request);
         return GraceJSONResult.ok(result);
     }
+    
 }

@@ -14,14 +14,12 @@ import com.cherry.utils.TokenUtils;
 import com.cherry.vo.UserVo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.Duration;
-import java.util.Objects;
 
 import static com.cherry.grace.result.ResponseStatusEnum.*;
 
@@ -76,40 +74,23 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
 
     @Override
     public UserVo userLogin(String account, String password) {
-        // 1) 校验账号密码
+        // 1.查询数据库
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
-        Users user = this.lambdaQuery()
-                .eq(Users::getAccount, account)
-                .eq(Users::getPassword, encryptPassword)
-                .one();
-
-        if (user == null || Objects.equals(user.getIsDelete(), 1) ||
-                "ban".equalsIgnoreCase(user.getUserRole())) {
+        QueryWrapper<Users> usersQueryWrapper = new QueryWrapper<>();
+        usersQueryWrapper.eq("account", account);
+        usersQueryWrapper.eq("password", encryptPassword);
+        // 2.判断用户是否存在
+        Users users = this.baseMapper.selectOne(usersQueryWrapper);
+        if (users == null) {
             GraceException.display(USER_NOT_EXIST_ERROR);
         }
-
-        String uid = String.valueOf(user.getId());
-
-        // 2) 踢掉旧 token（如果有）
-        String latestKey = RedisKeys.LOGIN_UID + uid;
-        String oldToken = (String) redisTemplate.opsForValue().get(latestKey);
-        if (StringUtils.isNotBlank(oldToken)) {
-            redisTemplate.delete(RedisKeys.LOGIN_TOKEN + oldToken);
-        }
-
-        // 3) 生成并保存新 token（仅返回纯 token）
-        String newToken = IdUtil.simpleUUID();
-        Duration ttl = Duration.ofDays(7);
-
-        redisTemplate.opsForValue().set(RedisKeys.LOGIN_TOKEN + newToken, uid, ttl);
-        redisTemplate.opsForValue().set(latestKey, newToken, ttl);
-
-        // 4) 组装返回
-        UserVo vo = getUserVo(user);
-        vo.setToken(newToken); // 只返回纯 token
-        return vo;
+        // 3.使用分布式redis存储用户态.
+        String tokenKey = RedisKeys.LOGIN_TOKEN + IdUtil.simpleUUID();
+        redisTemplate.opsForValue().set(tokenKey, users.getId(), Duration.ofDays(7));
+        UserVo userVo = this.getUserVo(users);
+        userVo.setToken(tokenKey);
+        return userVo;
     }
-
 
     @Override
     public UserVo getUserVo(Users user) {
@@ -123,37 +104,20 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
 
     @Override
     public Users getLoginUser(HttpServletRequest request) {
-        // 1) 从请求解析 Bearer Token（Authorization: Bearer xxx）
         String token = TokenUtils.resolveToken(request);
-        if (StringUtils.isBlank(token)) {
-            GraceException.display(UN_LOGIN); // 或 PARAMS_NULL
+        if (token == null) {
+            GraceException.display(PARAMS_NULL);
         }
-
-        // 2) token -> uid
-        String uid = (String) redisTemplate.opsForValue().get(RedisKeys.LOGIN_TOKEN + token);
-        if (StringUtils.isBlank(uid)) {
-            GraceException.display(UN_LOGIN); // 会话不存在或已过期/被踢
+        String tokenKey = RedisKeys.LOGIN_TOKEN + token;
+        String userId = (String) redisTemplate.opsForValue().get(tokenKey);
+        if (userId == null) {
+            GraceException.display(USER_NOT_EXIST_ERROR);
         }
-
-        // 3) 校验“是否最新 token”
-        String latest = (String) redisTemplate.opsForValue().get(RedisKeys.LOGIN_UID + uid);
-        if (!token.equals(latest)) {
-            GraceException.display(TICKET_INVALID); // 自定义业务码：你的账号在别处登录
+        Users users = this.baseMapper.selectById(userId);
+        if (users == null) {
+            GraceException.display(USER_NOT_EXIST_ERROR);
         }
-
-        // 4) 查用户（可加本地/Redis 缓存）
-        Users user = this.getById(uid);
-        if (user == null || Objects.equals(user.getIsDelete(), 1) ||
-                "ban".equalsIgnoreCase(user.getUserRole())) {
-            GraceException.display(UN_LOGIN);
-        }
-
-        // 5) （可选）滑动续期
-        Duration ttl = Duration.ofDays(7);
-        redisTemplate.expire(RedisKeys.LOGIN_TOKEN + token, ttl);
-        redisTemplate.expire(RedisKeys.LOGIN_UID + uid, ttl);
-
-        return user;
+        return users;
     }
 
     @Override
