@@ -1,7 +1,6 @@
-package com.cherry.questionbit.aop;
+package com.cherry.aop;
 
-import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -12,13 +11,9 @@ import org.springframework.util.StopWatch;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import java.util.UUID;
 
-/**
- * 请求响应日志 AOP
- *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
- **/
+
 @Aspect
 @Component
 @Slf4j
@@ -27,30 +22,48 @@ public class LogInterceptor {
     /**
      * 执行拦截
      */
-    @Around("execution(* com.cherry.questionbit.controller.*.*(..))")
-    public Object doInterceptor(ProceedingJoinPoint point) throws Throwable {
-        // 计时
+    @Around("execution(* com.cherry.service.impl..*.*(..))")
+    public Object recordTimeLog(ProceedingJoinPoint joinPoint) throws Throwable {
+
+        // 需要统计每一个service实现的执行时间，如果执行时间太久，则进行error级别的日志输出
+
+        // long begin = System.currentTimeMillis();
         StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-        // 获取请求路径
-        RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
-        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) requestAttributes).getRequest();
-        // 生成请求唯一 id
-        String requestId = UUID.randomUUID().toString();
-        String url = httpServletRequest.getRequestURI();
-        // 获取请求参数
-        Object[] args = point.getArgs();
-        String reqParam = "[" + StringUtils.join(args, ", ") + "]";
-        // 输出请求日志
-        log.info("request start，id: {}, path: {}, ip: {}, params: {}", requestId, url,
-                httpServletRequest.getRemoteHost(), reqParam);
-        // 执行原方法
-        Object result = point.proceed();
-        // 输出响应日志
+
+
+        String pointName = joinPoint.getTarget().getClass().getName()
+                + "."
+                + joinPoint.getSignature().getName();
+        stopWatch.start("执行主业务：" + pointName);
+        Object proceed = joinPoint.proceed();
         stopWatch.stop();
-        long totalTimeMillis = stopWatch.getTotalTimeMillis();
-        log.info("request end, id: {}, cost: {}ms", requestId, totalTimeMillis);
-        return result;
+
+        // stopWatch.start("执行其他业务1001");
+        // Thread.sleep(250);
+        // stopWatch.stop();
+        //
+        // stopWatch.start("执行其他业务2002");
+        // Thread.sleep(350);
+        // stopWatch.stop();
+
+        log.info(stopWatch.prettyPrint());
+        log.info(stopWatch.shortSummary());
+        log.info("任务总数：" + stopWatch.getTaskCount());
+        log.info("任务执行总时间：" + stopWatch.getTotalTimeMillis() + "ms");
+
+        // long end = System.currentTimeMillis();
+        // long takeTimes = end - begin;
+
+        long takeTimes = stopWatch.getTotalTimeMillis();
+        if (takeTimes > 3000) {
+            log.error("执行位置{}，执行时间太长了，耗费了{}毫秒", pointName, takeTimes);
+        } else if (takeTimes > 2000) {
+            log.warn("执行位置{}，执行时间稍微有点长，耗费了{}毫秒", pointName, takeTimes);
+        } else {
+            log.info("执行位置{}，执行时间正常，耗费了{}毫秒", pointName, takeTimes);
+        }
+
+        return proceed;
     }
 }
 

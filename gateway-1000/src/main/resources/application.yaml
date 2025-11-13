@@ -28,7 +28,7 @@ spring:
         - id: authRoute  # 每一项路由规则都有一个唯一的id
           uri: lb://auth-service
           predicates:
-            - Path=/auth/**
+            - Path=/auth/**,/passport/**
         - id: fileRoute  # 每一项路由规则都有一个唯一的id
           uri: lb://file-service
           predicates:
@@ -36,7 +36,7 @@ spring:
         - id: mainRoute  # 每一项路由规则都有一个唯一的id
           uri: lb://main-service
           predicates:
-            - Path=/main/**
+            - Path=/main/**,/userinfo/**
       globalcors:
         cors-configurations:
           '[/**]':
@@ -49,4 +49,29 @@ spring:
 logging:
   level:
     root: info
-      
+
+knife4j:
+  gateway:
+    enabled: true
+    strategy: manual
+    discover:
+      enabled: true
+      version: openapi3
+      excluded-services:
+        - gateway
+    routes:
+      - name: auth-service
+        service-name: auth-service
+        context-path: /
+        url: /auth-service/v3/api-docs?group=auth-service
+        order: 1
+      - name: main-service
+        service-name: main-service
+        context-path: /
+        url: /main-service/v3/api-docs?group=main-service
+        order: 2
+      - name: file-service
+        service-name: file-service
+        context-path: /
+        url: /file-service/v3/api-docs?group=file-service
+        order: 2

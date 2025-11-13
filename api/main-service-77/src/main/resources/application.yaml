@@ -6,6 +6,16 @@ server:
     max-swallow-size: -1
 
 spring:
+  data:
+    redis:
+      host: localhost
+      port: 5379
+      database: 0
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:4406/cloudchat
+    username: root
+    password: root
   application:
     name: main-service
   cloud:
@@ -16,3 +26,18 @@ spring:
         password: nacos
         ip: 127.0.0.1  # 强制指定注册IP
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'main-service'
+      paths-to-match: '/**'
+      packages-to-scan: com.cherry.controller
+knife4j:
+  enable: false
+  setting:
+    language: zh_cn

@@ -1,5 +1,7 @@
-package com.cherry;
+package com.cherry.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,13 +12,22 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author cherry
- * @since 2025-11-09
+ * @since 2025-11-10
  */
 public class Users implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    /**
+     * id
+     */
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
+
+    /**
+     * 微信号
+     */
+    private String wechatNum;
 
     /**
      * 登录账号（唯一）
@@ -27,11 +38,6 @@ public class Users implements Serializable {
      * 密码（加密存储）
      */
     private String password;
-
-    /**
-     * 微信号
-     */
-    private String wechatNum;
 
     /**
      * 微信号二维码
@@ -109,21 +115,44 @@ public class Users implements Serializable {
     private String signature;
 
     /**
+     * 用户角色：user/admin/ban
+     */
+    private String userRole;
+
+    /**
+     * 编辑时间
+     */
+    private LocalDateTime editTime;
+
+    /**
      * 创建时间
      */
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private LocalDateTime updatedTime;
+    private LocalDateTime updateTime;
 
-    public String getId() {
+    /**
+     * 是否删除
+     */
+    private Byte isDelete;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getWechatNum() {
+        return wechatNum;
+    }
+
+    public void setWechatNum(String wechatNum) {
+        this.wechatNum = wechatNum;
     }
 
     public String getAccount() {
@@ -140,14 +169,6 @@ public class Users implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getWechatNum() {
-        return wechatNum;
-    }
-
-    public void setWechatNum(String wechatNum) {
-        this.wechatNum = wechatNum;
     }
 
     public String getWechatNumImg() {
@@ -270,46 +291,73 @@ public class Users implements Serializable {
         this.signature = signature;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
+    public String getUserRole() {
+        return userRole;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
     }
 
-    public LocalDateTime getUpdatedTime() {
-        return updatedTime;
+    public LocalDateTime getEditTime() {
+        return editTime;
     }
 
-    public void setUpdatedTime(LocalDateTime updatedTime) {
-        this.updatedTime = updatedTime;
+    public void setEditTime(LocalDateTime editTime) {
+        this.editTime = editTime;
+    }
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
+
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Byte getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Byte isDelete) {
+        this.isDelete = isDelete;
     }
 
     @Override
     public String toString() {
         return "Users{" +
-        "id = " + id +
-        ", account = " + account +
-        ", password = " + password +
-        ", wechatNum = " + wechatNum +
-        ", wechatNumImg = " + wechatNumImg +
-        ", mobile = " + mobile +
-        ", nickname = " + nickname +
-        ", realName = " + realName +
-        ", sex = " + sex +
-        ", face = " + face +
-        ", email = " + email +
-        ", birthday = " + birthday +
-        ", country = " + country +
-        ", province = " + province +
-        ", city = " + city +
-        ", district = " + district +
-        ", chatBg = " + chatBg +
-        ", friendCircleBg = " + friendCircleBg +
-        ", signature = " + signature +
-        ", createdTime = " + createdTime +
-        ", updatedTime = " + updatedTime +
-        "}";
+                "id = " + id +
+                ", wechatNum = " + wechatNum +
+                ", account = " + account +
+                ", password = " + password +
+                ", wechatNumImg = " + wechatNumImg +
+                ", mobile = " + mobile +
+                ", nickname = " + nickname +
+                ", realName = " + realName +
+                ", sex = " + sex +
+                ", face = " + face +
+                ", email = " + email +
+                ", birthday = " + birthday +
+                ", country = " + country +
+                ", province = " + province +
+                ", city = " + city +
+                ", district = " + district +
+                ", chatBg = " + chatBg +
+                ", friendCircleBg = " + friendCircleBg +
+                ", signature = " + signature +
+                ", userRole = " + userRole +
+                ", editTime = " + editTime +
+                ", createTime = " + createTime +
+                ", updateTime = " + updateTime +
+                ", isDelete = " + isDelete +
+                "}";
     }
 }

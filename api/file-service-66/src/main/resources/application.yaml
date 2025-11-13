@@ -2,10 +2,14 @@ server:
   port: 8066
   tomcat:
     uri-encoding: utf-8
-#    请求大小不限制
+    #    请求大小不限制
     max-swallow-size: -1
-    
+
 spring:
+  servlet:
+    multipart:
+      # 大小限制
+      max-file-size: 10MB
   application:
     name: file-service
   cloud:
@@ -15,3 +19,28 @@ spring:
         username: nacos
         password: nacos
         ip: 127.0.0.1  # 强制指定注册IP
+minio:
+  client:
+    endpoint: http://127.0.0.1:9000
+    fileHost: http://127.0.0.1:9000
+    bucketName: cloudchat
+    accessKey: minioadmin
+    secretKey: minioadmin
+    
+    
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'file-service'
+      paths-to-match: '/**'
+      packages-to-scan: com.cherry.controller
+knife4j:
+  enable: false
+  setting:
+    language: zh_cn
+

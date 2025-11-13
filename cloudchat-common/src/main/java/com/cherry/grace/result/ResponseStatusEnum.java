@@ -42,6 +42,8 @@ public enum ResponseStatusEnum {
     USER_NOT_EXIST_ERROR(516,false,"用户不存在！"),
     USER_PARAMS_ERROR(517,false,"用户请求参数出错！"),
     USER_REGISTER_ERROR(518,false,"用户注册失败，请重试！"),
+    PARAMS_NULL(519, false, "所填参数为空"),
+    PARAMS_IS_TOO_SHORT(520, false, "所填参数为空"),
 
     // 自定义系统级别异常 54x
     SYSTEM_INDEX_OUT_OF_BOUNDS(541, false, "系统错误，数组越界！"),

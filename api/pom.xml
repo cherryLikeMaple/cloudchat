@@ -15,6 +15,7 @@
         <module>auth-service-88</module>
         <module>main-service-77</module>
         <module>file-service-66</module>
+        <module>base-service</module>
     </modules>
 
     <dependencies>

@@ -16,23 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public interface UsersService extends IService<Users> {
 
     
-
-    /**
-     * 用户登录
-     * @param account
-     * @param password
-     * @param checkPassword
-     * @return
-     */
-    long userRegister(String account, String password, String checkPassword);
-
-    /**
-     * 用户登录
-     * @param account
-     * @param password
-     * @return
-     */
-    UserVo userLogin(String account, String password);
+    
 
     /**
      * entity 转 vo
@@ -47,6 +31,7 @@ public interface UsersService extends IService<Users> {
      * @return
      */
     Users getLoginUser(HttpServletRequest request);
+    Users getLoginUser(String authorization);
 
     /**
      * 用户注销

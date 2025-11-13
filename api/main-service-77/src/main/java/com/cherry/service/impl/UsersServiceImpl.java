@@ -1,11 +1,7 @@
 package com.cherry.service.impl;
 
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.RandomUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cherry.constant.RedisKeys;
-import com.cherry.enums.Sex;
 import com.cherry.exceptions.GraceException;
 import com.cherry.mapper.UsersMapper;
 import com.cherry.pojo.Users;
@@ -14,12 +10,13 @@ import com.cherry.utils.TokenUtils;
 import com.cherry.vo.UserVo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 
 import java.time.Duration;
+import java.util.Objects;
 
 import static com.cherry.grace.result.ResponseStatusEnum.*;
 
@@ -39,58 +36,9 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     @Resource
     private RedisTemplate redisTemplate;
 
-    @Override
-    public long userRegister(String account, String password, String checkPassword) {
-        // 1.校验
-        if (account.length() < 4) {
-            GraceException.display(PARAMS_IS_TOO_SHORT);
-        }
-        if (password.length() < 6) {
-            GraceException.display(PARAMS_IS_TOO_SHORT);
-        }
-        if (!password.equals(checkPassword)) {
-            GraceException.display(ADMIN_PASSWORD_ERROR);
-        }
-        synchronized (account.intern()) {
-            QueryWrapper<Users> userQueryWrapper = new QueryWrapper<>();
-            userQueryWrapper.eq("account", account);
-            Long count = this.baseMapper.selectCount(userQueryWrapper);
-            if (count > 0) {
-                GraceException.display(USER_ALREADY_EXIST_ERROR);
-            }
-            String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
-            Users users = new Users();
-            users.setAccount(account);
-            users.setPassword(encryptPassword);
-            users.setNickname(NICKNAME + RandomUtil.randomString(4));
-            users.setSex(Sex.secret.type);
-            boolean result = this.save(users);
-            if (!result) {
-                GraceException.display(SYSTEM_OPERATION_ERROR);
-            }
-            return users.getId();
-        }
-    }
 
-    @Override
-    public UserVo userLogin(String account, String password) {
-        // 1.查询数据库
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
-        QueryWrapper<Users> usersQueryWrapper = new QueryWrapper<>();
-        usersQueryWrapper.eq("account", account);
-        usersQueryWrapper.eq("password", encryptPassword);
-        // 2.判断用户是否存在
-        Users users = this.baseMapper.selectOne(usersQueryWrapper);
-        if (users == null) {
-            GraceException.display(USER_NOT_EXIST_ERROR);
-        }
-        // 3.使用分布式redis存储用户态.
-        String tokenKey = RedisKeys.LOGIN_TOKEN + IdUtil.simpleUUID();
-        redisTemplate.opsForValue().set(tokenKey, users.getId(), Duration.ofDays(7));
-        UserVo userVo = this.getUserVo(users);
-        userVo.setToken(tokenKey);
-        return userVo;
-    }
+
+
 
     @Override
     public UserVo getUserVo(Users user) {
@@ -101,23 +49,79 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         BeanUtils.copyProperties(user, userVo);
         return userVo;
     }
-
     @Override
     public Users getLoginUser(HttpServletRequest request) {
+        // 1) 从请求解析 Bearer Token（Authorization: Bearer xxx）
         String token = TokenUtils.resolveToken(request);
-        if (token == null) {
-            GraceException.display(PARAMS_NULL);
+        if (StringUtils.isBlank(token)) {
+            GraceException.display(UN_LOGIN); // 或 PARAMS_NULL
         }
-        String tokenKey = RedisKeys.LOGIN_TOKEN + token;
-        String userId = (String) redisTemplate.opsForValue().get(tokenKey);
-        if (userId == null) {
-            GraceException.display(USER_NOT_EXIST_ERROR);
+
+        // 2) token -> uid
+        String uid = (String) redisTemplate.opsForValue().get(RedisKeys.LOGIN_TOKEN + token);
+        if (StringUtils.isBlank(uid)) {
+            GraceException.display(UN_LOGIN); // 会话不存在或已过期/被踢
         }
-        Users users = this.baseMapper.selectById(userId);
-        if (users == null) {
-            GraceException.display(USER_NOT_EXIST_ERROR);
+
+        // 3) 校验“是否最新 token”
+        String latest = (String) redisTemplate.opsForValue().get(RedisKeys.LOGIN_UID + uid);
+        if (!token.equals(latest)) {
+            GraceException.display(TICKET_INVALID); // 自定义业务码：你的账号在别处登录
         }
-        return users;
+
+        // 4) 查用户（可加本地/Redis 缓存）
+        Users user = this.getById(uid);
+        if (user == null || Objects.equals(user.getIsDelete(), 1) ||
+                "ban".equalsIgnoreCase(user.getUserRole())) {
+            GraceException.display(UN_LOGIN);
+        }
+
+        // 5) （可选）滑动续期
+        Duration ttl = Duration.ofDays(7);
+        redisTemplate.expire(RedisKeys.LOGIN_TOKEN + token, ttl);
+        redisTemplate.expire(RedisKeys.LOGIN_UID + uid, ttl);
+
+        return user;
+    }
+
+    @Override
+    public Users getLoginUser(String authorization) {
+        // 1) 从请求解析 Bearer Token（Authorization: Bearer xxx）
+        String auth = authorization;
+        if (auth == null) return null;
+        if (auth.startsWith("Bearer ")) {
+            auth = auth.substring(7);
+        }
+        String token = auth.trim();
+        if (StringUtils.isBlank(token)) {
+            GraceException.display(UN_LOGIN); // 或 PARAMS_NULL
+        }
+
+        // 2) token -> uid
+        String uid = (String) redisTemplate.opsForValue().get(RedisKeys.LOGIN_TOKEN + token);
+        if (StringUtils.isBlank(uid)) {
+            GraceException.display(UN_LOGIN); // 会话不存在或已过期/被踢
+        }
+
+        // 3) 校验“是否最新 token”
+        String latest = (String) redisTemplate.opsForValue().get(RedisKeys.LOGIN_UID + uid);
+        if (!token.equals(latest)) {
+            GraceException.display(TICKET_INVALID); // 自定义业务码：你的账号在别处登录
+        }
+
+        // 4) 查用户（可加本地/Redis 缓存）
+        Users user = this.getById(uid);
+        if (user == null || Objects.equals(user.getIsDelete(), 1) ||
+                "ban".equalsIgnoreCase(user.getUserRole())) {
+            GraceException.display(UN_LOGIN);
+        }
+
+        // 5) （可选）滑动续期
+        Duration ttl = Duration.ofDays(7);
+        redisTemplate.expire(RedisKeys.LOGIN_TOKEN + token, ttl);
+        redisTemplate.expire(RedisKeys.LOGIN_UID + uid, ttl);
+
+        return user;
     }
 
     @Override

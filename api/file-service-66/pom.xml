@@ -10,5 +10,22 @@
     </parent>
 
     <artifactId>file-service-66</artifactId>
-     
+
+    <dependencies>
+        <!--            对象存储-->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.cherry</groupId>
+            <artifactId>base-service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 </project>

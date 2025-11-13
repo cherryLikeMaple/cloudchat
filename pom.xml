@@ -53,6 +53,28 @@
                 <artifactId>hutool-all</artifactId>
                 <version>5.8.26</version>
             </dependency>
+            <!--        数据库驱动-->
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>8.3.0</version>
+            </dependency>
+<!--            对象存储-->
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>8.4.5</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>4.8.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>3.4.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
