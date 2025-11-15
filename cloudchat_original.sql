@@ -861,8 +861,8 @@ CREATE TABLE `friendship`
     `friend_remark` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '好友的备注名',
     `is_msg_ignore` int                                                          NOT NULL COMMENT '是否消息免打扰，0-打扰，不忽略消息(默认)；1-免打扰，忽略消息',
     `is_black`      int                                                          NOT NULL COMMENT '是否拉黑，0-好友(默认)；1-已拉黑',
-    `created_time`  datetime                                                     NOT NULL COMMENT '创建时间',
-    `updated_time`  datetime                                                     NOT NULL COMMENT '更新时间',
+    `create_time`       datetime                                                      default CURRENT_TIMESTAMP not null comment '创建时间',
+    `update_time`       datetime                                                      default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `my_id` (`my_id`, `friend_id`) USING BTREE
 ) ENGINE = InnoDB

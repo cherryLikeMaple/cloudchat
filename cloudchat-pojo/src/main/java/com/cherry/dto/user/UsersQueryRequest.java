@@ -1,21 +1,19 @@
-package com.cherry.vo;
+package com.cherry.dto.user;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.cherry.common.PageRequest;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * @author cherry
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class UserVo implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    private String token;
+public class UsersQueryRequest extends PageRequest implements Serializable {
+    
     
     private Long id;
 
@@ -23,8 +21,7 @@ public class UserVo implements Serializable {
      * 登录账号（唯一）
      */
     private String account;
-    
-    
+
     /**
      * 手机号
      */
@@ -34,17 +31,16 @@ public class UserVo implements Serializable {
      * 昵称
      */
     private String nickname;
-    
+
+    /**
+     * 真实姓名
+     */
+    private String realName;
 
     /**
      * 性别，1:男 0:女 2:保密
      */
     private Integer sex;
-
-    /**
-     * 用户头像
-     */
-    private String face;
 
     /**
      * 邮箱
@@ -73,12 +69,8 @@ public class UserVo implements Serializable {
     
 
     /**
-     * 我的一句话签名
+     * 用户角色：user/admin/ban
      */
-    private String signature;
+    private String userRole;
 
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createdTime;
 }

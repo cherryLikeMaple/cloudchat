@@ -1,6 +1,8 @@
 package com.cherry.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cherry.dto.user.UsersQueryRequest;
 import com.cherry.pojo.Users;
 import com.cherry.vo.UserVo;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,9 +36,13 @@ public interface UsersService extends IService<Users> {
     Users getLoginUser(String authorization);
 
     /**
-     * 用户注销
-     * @param request
+     * 获取查询条件
+     * @param usersQueryRequest
      * @return
      */
-    boolean logout(HttpServletRequest request);
+    QueryWrapper<Users> getQueryWrapper(UsersQueryRequest usersQueryRequest);
+
+    /**
+     * 
+     */
 }

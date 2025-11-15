@@ -96,14 +96,14 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         if (StringUtils.isNotBlank(oldToken)) {
             redisTemplate.delete(RedisKeys.LOGIN_TOKEN + oldToken);
         }
-
         // 3) 生成并保存新 token（仅返回纯 token）
         String newToken = IdUtil.simpleUUID();
         Duration ttl = Duration.ofDays(7);
-
         redisTemplate.opsForValue().set(RedisKeys.LOGIN_TOKEN + newToken, uid, ttl);
         redisTemplate.opsForValue().set(latestKey, newToken, ttl);
 
+        
+        
         // 4) 组装返回
         UserVo vo = getUserVo(user);
         vo.setToken(newToken); // 只返回纯 token

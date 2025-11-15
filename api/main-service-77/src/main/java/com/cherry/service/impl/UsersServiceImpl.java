@@ -1,7 +1,9 @@
 package com.cherry.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cherry.constant.RedisKeys;
+import com.cherry.dto.user.UsersQueryRequest;
 import com.cherry.exceptions.GraceException;
 import com.cherry.mapper.UsersMapper;
 import com.cherry.pojo.Users;
@@ -16,6 +18,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.Objects;
 
 import static com.cherry.grace.result.ResponseStatusEnum.*;
@@ -37,9 +40,6 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     private RedisTemplate redisTemplate;
 
 
-
-
-
     @Override
     public UserVo getUserVo(Users user) {
         if (user == null) {
@@ -49,6 +49,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         BeanUtils.copyProperties(user, userVo);
         return userVo;
     }
+
     @Override
     public Users getLoginUser(HttpServletRequest request) {
         // 1) 从请求解析 Bearer Token（Authorization: Bearer xxx）
@@ -116,7 +117,6 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
             GraceException.display(UN_LOGIN);
         }
 
-        // 5) （可选）滑动续期
         Duration ttl = Duration.ofDays(7);
         redisTemplate.expire(RedisKeys.LOGIN_TOKEN + token, ttl);
         redisTemplate.expire(RedisKeys.LOGIN_UID + uid, ttl);
@@ -124,14 +124,43 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         return user;
     }
 
-    @Override
-    public boolean logout(HttpServletRequest request) {
-        String token = TokenUtils.resolveToken(request);
-        if (token == null) {
-            GraceException.display(PARAMS_NULL);
+        @Override
+        public QueryWrapper<Users> getQueryWrapper(UsersQueryRequest usersQueryRequest) {
+            if (usersQueryRequest == null) {
+                GraceException.display(PARAMS_NULL);
+            }
+    
+            Long id = usersQueryRequest.getId();
+            String account = usersQueryRequest.getAccount();
+            String mobile = usersQueryRequest.getMobile();
+            String nickname = usersQueryRequest.getNickname();
+            String realName = usersQueryRequest.getRealName();
+            Integer sex = usersQueryRequest.getSex();
+            String email = usersQueryRequest.getEmail();
+            LocalDate birthday = usersQueryRequest.getBirthday();
+            String country = usersQueryRequest.getCountry();
+            String province = usersQueryRequest.getProvince();
+            String city = usersQueryRequest.getCity();
+            String userRole = usersQueryRequest.getUserRole();
+            String sortField = usersQueryRequest.getSortField();
+            String sortOrder = usersQueryRequest.getSortOrder();
+    
+            QueryWrapper<Users> usersQueryWrapper = new QueryWrapper<>();
+            // 构造查询条件
+            usersQueryWrapper.eq(id != null, "id", id);
+            usersQueryWrapper.eq(StringUtils.isNotBlank(account), "account", account);
+            usersQueryWrapper.eq(StringUtils.isNotBlank(mobile), "mobile", mobile);
+            usersQueryWrapper.eq(sex != null, "sex", sex);
+            usersQueryWrapper.eq(StringUtils.isNotBlank(country), "country", country);
+            usersQueryWrapper.eq(StringUtils.isNotBlank(province), "province", province);
+            usersQueryWrapper.eq(StringUtils.isNotBlank(city), "city", city);
+            usersQueryWrapper.eq(birthday != null, "birthday", birthday);
+            usersQueryWrapper.eq(StringUtils.isNotBlank(userRole), "user_role", userRole);
+            usersQueryWrapper.like(StringUtils.isNotBlank(nickname), "nickname", nickname);
+            usersQueryWrapper.like(StringUtils.isNotBlank(realName), "real_name", realName);
+            usersQueryWrapper.like(StringUtils.isNotBlank(email), "email", email);
+            
+            return usersQueryWrapper;
         }
-        String tokenKey = RedisKeys.LOGIN_TOKEN + token;
-        redisTemplate.delete(tokenKey);
-        return true;
-    }
+
 }

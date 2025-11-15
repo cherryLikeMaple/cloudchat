@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * @author cherry
+ */
 @Data
 public class UserUpdateRequest implements Serializable {
     private static final long serialVersionUID = 3191241716373120793L;
@@ -12,11 +15,8 @@ public class UserUpdateRequest implements Serializable {
     private String face;
     private Integer sex;
     private String nickname;
-    private String wechatNum;
+    private String mobile;
     private String province;
     private String city;
-    private String district;
-    private String chatBg;
-    private String friendCircleBg;
     private String signature;
 }
