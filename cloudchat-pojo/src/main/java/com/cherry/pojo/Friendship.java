@@ -1,5 +1,7 @@
 package com.cherry.pojo;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -11,21 +13,22 @@ import java.time.LocalDateTime;
  * @author cherry
  * @since 2025-11-15
  */
+@Data
 public class Friendship implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private Long id;
 
     /**
      * 自己的用户id
      */
-    private String myId;
+    private Long myId;
 
     /**
      * 我朋友的id
      */
-    private String friendId;
+    private Long friendId;
 
     /**
      * 好友的备注名
@@ -51,82 +54,6 @@ public class Friendship implements Serializable {
      * 更新时间
      */
     private LocalDateTime updateTime;
+    
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getMyId() {
-        return myId;
-    }
-
-    public void setMyId(String myId) {
-        this.myId = myId;
-    }
-
-    public String getFriendId() {
-        return friendId;
-    }
-
-    public void setFriendId(String friendId) {
-        this.friendId = friendId;
-    }
-
-    public String getFriendRemark() {
-        return friendRemark;
-    }
-
-    public void setFriendRemark(String friendRemark) {
-        this.friendRemark = friendRemark;
-    }
-
-    public Integer getIsMsgIgnore() {
-        return isMsgIgnore;
-    }
-
-    public void setIsMsgIgnore(Integer isMsgIgnore) {
-        this.isMsgIgnore = isMsgIgnore;
-    }
-
-    public Integer getIsBlack() {
-        return isBlack;
-    }
-
-    public void setIsBlack(Integer isBlack) {
-        this.isBlack = isBlack;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Friendship{" +
-        "id = " + id +
-        ", myId = " + myId +
-        ", friendId = " + friendId +
-        ", friendRemark = " + friendRemark +
-        ", isMsgIgnore = " + isMsgIgnore +
-        ", isBlack = " + isBlack +
-        ", createTime = " + createTime +
-        ", updateTime = " + updateTime +
-        "}";
-    }
 }

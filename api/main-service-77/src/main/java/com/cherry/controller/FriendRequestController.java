@@ -30,6 +30,20 @@ public class FriendRequestController {
     private FriendRequestService friendRequestService;
 
     /**
+     * 根据id得到好友请求数据
+     * @param id
+     * @return
+     */
+    @GetMapping("/get/vo")
+    public GraceJSONResult getFriendRequestVo(long id) {
+        if (id <= 0) {
+            GraceException.display(ResponseStatusEnum.PARAMS_NULL);
+        }
+        FriendRequest friendRequest = friendRequestService.getById(id);
+        return GraceJSONResult.ok(friendRequestService.getFriendRequestVo(friendRequest));
+    }
+
+    /**
      * 添加好友请求
      * @param addUsersRequest
      * @return
@@ -56,4 +70,29 @@ public class FriendRequestController {
 
         return GraceJSONResult.ok(pageResult);
     }
+
+    /**
+     * 同意好友请求
+     * @param friendRequestId
+     * @param friendRemark
+     * @return
+     */
+    @PostMapping("/pass")
+    public GraceJSONResult pass(String friendRequestId, String friendRemark) {
+        friendRequestService.passFriendRequest(friendRequestId, friendRemark);
+        return GraceJSONResult.ok();
+    }
+
+    /**
+     * 拒绝好友请求
+     * @param friendRequestId
+     * @return
+     */
+    @PostMapping("/refuse")
+    public GraceJSONResult refuse(String friendRequestId) {
+        friendRequestService.refuseFriendRequest(friendRequestId);
+        return GraceJSONResult.ok();
+    }
+    
+    
 }

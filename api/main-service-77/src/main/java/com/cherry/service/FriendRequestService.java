@@ -37,4 +37,26 @@ public interface FriendRequestService extends IService<FriendRequest> {
     Page<FriendRequestVo> getFriendRequestVoPage(Long currentPage,
                                                  Long pageSize,
                                                  HttpServletRequest request);
+
+
+    /**
+     * 同意好友请求
+     * @param friendRequestId
+     * @param friendRemark
+     */
+    void passFriendRequest(String friendRequestId, String friendRemark);
+
+    /**
+     * 拒绝好友请求
+     * @param friendRequestId
+     */
+    void refuseFriendRequest(String friendRequestId);
+
+    /**
+     * 得到包装类
+     * @param friendRequest
+     * @return
+     */
+    FriendRequestVo getFriendRequestVo(FriendRequest friendRequest);
+
 }

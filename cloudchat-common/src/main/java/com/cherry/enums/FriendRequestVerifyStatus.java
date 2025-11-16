@@ -9,6 +9,7 @@ public enum FriendRequestVerifyStatus {
 
 	WAIT(0, "待审核"),
 	SUCCESS(1, "已添加"),
+	FAIL(2, "拒绝"),
 	EXPIRE(2, "已过期");
 
 	public final Integer type;

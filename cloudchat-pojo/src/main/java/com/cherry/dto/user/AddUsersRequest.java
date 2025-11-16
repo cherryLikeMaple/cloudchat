@@ -8,8 +8,8 @@ import lombok.Data;
 @Data
 public class AddUsersRequest {
     
-    private String myId;
-    private String friendId;
+    private Long myId;
+    private Long friendId;
     private String verifyMessage;
     private String friendRemark;
 }
