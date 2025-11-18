@@ -1,22 +1,15 @@
 package com.cherry.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cherry.dto.user.AddUsersRequest;
-import com.cherry.dto.user.UserUpdateRequest;
-import com.cherry.dto.user.UsersQueryRequest;
 import com.cherry.exceptions.GraceException;
 import com.cherry.grace.result.GraceJSONResult;
 import com.cherry.grace.result.ResponseStatusEnum;
 import com.cherry.pojo.FriendRequest;
-import com.cherry.pojo.Users;
 import com.cherry.service.FriendRequestService;
-import com.cherry.service.UsersService;
 import com.cherry.vo.FriendRequestVo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**

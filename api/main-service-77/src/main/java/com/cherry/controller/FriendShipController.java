@@ -1,17 +1,13 @@
 package com.cherry.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.cherry.dto.user.AddUsersRequest;
 import com.cherry.enums.YesOrNo;
 import com.cherry.exceptions.GraceException;
 import com.cherry.grace.result.GraceJSONResult;
 import com.cherry.grace.result.ResponseStatusEnum;
-import com.cherry.pojo.FriendRequest;
 import com.cherry.pojo.Users;
-import com.cherry.service.FriendRequestService;
 import com.cherry.service.FriendshipService;
 import com.cherry.service.UsersService;
-import com.cherry.vo.FriendRequestVo;
 import com.cherry.vo.FriendshipVo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -114,7 +110,7 @@ public class FriendShipController {
             GraceException.display(ResponseStatusEnum.PARAMS_NULL);
         }
         Users loginUser = usersService.getLoginUser(request);
-        friendshipService.updateFriendRemark(friendId, loginUser.getId(), remark);
+        friendshipService.updateFriendRemark(loginUser.getId(), friendId, remark);
         return GraceJSONResult.ok();
     }
 

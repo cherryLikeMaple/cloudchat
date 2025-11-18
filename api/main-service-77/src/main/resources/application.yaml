@@ -2,10 +2,12 @@ server:
   port: 8077
   tomcat:
     uri-encoding: utf-8
-#    请求大小不限制
+    #    请求大小不限制
     max-swallow-size: -1
 
 spring:
+  jackson:
+    time-zone: Asia/Shanghai
   data:
     redis:
       host: localhost
@@ -13,7 +15,7 @@ spring:
       database: 0
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:4406/cloudchat
+    url: jdbc:mysql://localhost:4406/cloudchat?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: root
   application:
@@ -25,7 +27,7 @@ spring:
         username: nacos
         password: nacos
         ip: 127.0.0.1  # 强制指定注册IP
-        
+
 mybatis-plus:
   mapper-scan: com.cherry.mapper
   configuration:

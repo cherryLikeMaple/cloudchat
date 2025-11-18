@@ -5,25 +5,24 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.cherry</groupId>
-        <artifactId>cloudchat-backend</artifactId>
+        <artifactId>api</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>api</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>auth-service-88</module>
-        <module>main-service-77</module>
-        <module>file-service-66</module>
-        <module>base-service</module>
-        <module>chat-server-8875</module>
-    </modules>
+    <artifactId>chat-server-8875</artifactId>
 
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    
     <dependencies>
         <dependency>
-            <groupId>com.cherry</groupId>
-            <artifactId>cloudchat-pojo</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.25.Final</version>
         </dependency>
     </dependencies>
+
 </project>

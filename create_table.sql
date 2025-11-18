@@ -31,17 +31,45 @@ create table users
 )
     comment '用户表';
 
-INSERT INTO users (account, nickname, face)
-VALUES ('cherry01', 'Cherry', 'https://api.iconify.design/flat-color-icons/portrait.svg'),
-       ('maple02', '枫叶君', 'https://api.iconify.design/flat-color-icons/businessman.svg'),
-       ('bluecat03', '蓝猫', 'https://api.iconify.design/flat-color-icons/cat.svg'),
-       ('sunshine04', '小太阳', 'https://api.iconify.design/flat-color-icons/sun.svg'),
-       ('coder05', '程序猿', 'https://api.iconify.design/flat-color-icons/electronics.svg'),
-       ('snow06', '小雪', 'https://api.iconify.design/flat-color-icons/snowflake.svg'),
-       ('tiger07', '阿虎', 'https://api.iconify.design/flat-color-icons/tiger.svg'),
-       ('lemon08', '柠檬茶', 'https://api.iconify.design/flat-color-icons/lemon.svg'),
-       ('ocean09', '海盐', 'https://api.iconify.design/flat-color-icons/water.svg'),
-       ('fox10', '小狐狸', 'https://api.iconify.design/flat-color-icons/fox.svg');
+INSERT INTO users (id, wechat_num, account, password, wechat_num_img, mobile, nickname, real_name, sex, face, email,
+                   birthday, country, province, city, district, chat_bg, friend_circle_bg, signature, user_role,
+                   edit_time, create_time, update_time, is_delete)
+VALUES (4, 'wechat_iceblue', 'iceblue', '4fde5058ac874f8e3f97cb443bcaba28', NULL, '13311110004', 'IceBlue', '韩冰', 2,
+        'http://127.0.0.1:9000/cloudcloudchat/face/4/avatar4.jpg', 'iceblue@gmail.com', '2000-12-03', '中国', '北京',
+        '朝阳', '望京', 'http://127.0.0.1:9000/cloudchat/chatbg/bg4.jpg',
+        'http://127.0.0.1:9000/cloudchat/friendbg/fb4.jpg', '保持冷静，保持热爱', 'user', '2025-11-09 10:22:45',
+        '2025-11-09 10:22:45', '2025-11-11 17:01:05', 0),
+
+       (5, 'wechat_nova', 'nova', '4fde5058ac874f8e3f97cb443bcaba28', NULL, '13311110005', 'Nova', '江辰', 1,
+        'http://127.0.0.1:9000/cloudchat/face/5/avatar5.jpg', 'nova@outlook.com', '2004-04-09', '中国', '江苏', '苏州',
+        '姑苏', 'http://127.0.0.1:9000/cloudchat/chatbg/bg5.jpg', 'http://127.0.0.1:9000/cloudchat/friendbg/fb5.jpg',
+        '星光不问赶路人', 'user', '2025-11-08 16:33:29', '2025-11-08 16:33:29', '2025-11-14 10:55:01', 0),
+
+       (6, 'wechat_sakura', 'sakura', '4fde5058ac874f8e3f97cb443bcaba28', NULL, '13311110006', 'Sakura', '小樱', 0,
+        'http://127.0.0.1:9000/cloudchat/face/6/avatar6.jpg', 'sakura@qq.com', '2003-02-17', '日本', '东京', '港区',
+        '六本木', 'http://127.0.0.1:9000/cloudchat/chatbg/bg6.jpg', 'http://127.0.0.1:9000/cloudchat/friendbg/fb6.jpg',
+        '世界灿烂，欢迎加入', 'user', '2025-11-08 12:03:22', '2025-11-08 12:03:22', '2025-11-11 09:11:11', 0),
+
+       (7, 'wechat_shadow', 'shadow', '4fde5058ac874f8e3f97cb443bcaba28', NULL, '13311110007', 'Shadow', '江影', 1,
+        'http://127.0.0.1:9000/cloudchat/face/7/avatar7.jpg', 'shadow@gmail.com', '2001-03-06', '中国', '四川', '成都',
+        '武侯', 'http://127.0.0.1:9000/cloudchat/chatbg/bg7.jpg', 'http://127.0.0.1:9000/cloudchat/friendbg/fb7.jpg',
+        '影子也会发光', 'user', '2025-11-07 11:51:01', '2025-11-07 11:51:01', '2025-11-10 14:20:12', 0),
+
+       (8, 'wechat_luna', 'luna', '4fde5058ac874f8e3f97cb443bcaba28', NULL, '13311110008', 'Luna', '李月', 0,
+        'http://127.0.0.1:9000/cloudchat/face/8/avatar8.jpg', 'luna@foxmail.com', '2002-07-29', '中国', '福建', '厦门',
+        '思明', 'http://127.0.0.1:9000/cloudchat/chatbg/bg8.jpg', 'http://127.0.0.1:9000/cloudchat/friendbg/fb8.jpg',
+        '月亮会一直等你', 'user', '2025-11-07 09:44:31', '2025-11-07 09:44:31', '2025-11-12 19:05:44', 0),
+
+       (9, 'wechat_odin', 'odin', '4fde5058ac874f8e3f97cb443bcaba28', NULL, '13311110009', 'Odin', '欧丁', 1,
+        'http://127.0.0.1:9000/cloudchat/face/9/avatar9.jpg', 'odin@163.com', '1999-09-09', '德国', '柏林', '米特',
+        '中心区', 'http://127.0.0.1:9000/cloudchat/chatbg/bg9.jpg', 'http://127.0.0.1:9000/cloudchat/friendbg/fb9.jpg',
+        '极致的光，来自深处的暗', 'user', '2025-11-06 15:31:21', '2025-11-06 15:31:21', '2025-11-12 11:09:30', 0),
+
+       (10, 'wechat_peach', 'peach', '4fde5058ac874f8e3f97cb443bcaba28', NULL, '13311110010', 'Peach', '桃子', 0,
+        'http://127.0.0.1:9000/cloudchat/face/10/avatar10.jpg', 'peach@gmail.com', '2004-01-18', '中国', '浙江', '宁波',
+        '鄞州', 'http://127.0.0.1:9000/cloudchat/chatbg/bg10.jpg', 'http://127.0.0.1:9000/cloudchat/friendbg/fb10.jpg',
+        '可爱永不过期', 'user', '2025-11-06 13:13:45', '2025-11-06 13:13:45', '2025-11-13 16:26:14', 0);
+
 
 
 DROP TABLE IF EXISTS `friendship`;
@@ -76,3 +104,60 @@ CREATE TABLE `friend_request`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT ='好友请求记录表';
+
+
+DROP TABLE IF EXISTS `friend_circle`;
+CREATE TABLE `friend_circle`
+(
+    `id`          bigint   NOT NULL AUTO_INCREMENT COMMENT '主键id',
+    `user_id`     bigint   NOT NULL COMMENT '发朋友圈的用户id',
+    `words`       varchar(256)      DEFAULT NULL COMMENT '文字内容',
+    `images`      varchar(2560)     DEFAULT NULL COMMENT '图片内容，url用逗号分割',
+    `video`       varchar(256)      DEFAULT NULL COMMENT '视频url',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci
+    COMMENT = '朋友圈表';
+
+
+DROP TABLE IF EXISTS `friend_circle_liked`;
+CREATE TABLE `friend_circle_liked`
+(
+    `id`               bigint   NOT NULL AUTO_INCREMENT COMMENT '主键id',
+    `belong_user_id`   bigint   NOT NULL COMMENT '朋友圈归属用户的id',
+    `friend_circle_id` bigint   NOT NULL COMMENT '点赞的那个朋友圈id',
+    `liked_user_id`    bigint   NOT NULL COMMENT '点赞的那个用户id',
+    `create_time`      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT ='点赞朋友圈的朋友';
+
+
+DROP TABLE IF EXISTS `comment`;
+CREATE TABLE `comment`
+(
+    `id`               bigint       NOT NULL AUTO_INCREMENT COMMENT '主键id',
+    `belong_user_id`   bigint       NOT NULL COMMENT '朋友圈所属用户id（这条朋友圈的主人）',
+    `father_id`        bigint                DEFAULT NULL COMMENT '父评论id（如果是回复，则此字段为父评论）',
+    `friend_circle_id` bigint       NOT NULL COMMENT '关联的朋友圈id',
+    `comment_user_id`  bigint       NOT NULL COMMENT '评论人用户id',
+    `reply_to_user_id` bigint                DEFAULT NULL COMMENT '被回复的用户id（一级评论可为朋友圈主人或空）',
+    `comment_content`  varchar(512) NOT NULL COMMENT '评论内容',
+    `created_time`     datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '评论时间',
+    `updated_time`     datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `is_delete`        tinyint(1)   NOT NULL DEFAULT 0 COMMENT '是否删除：0-正常，1-已删除',
+    `status`           tinyint(1)   NOT NULL DEFAULT 0 COMMENT '状态：0-正常，1-屏蔽/违规',
+    PRIMARY KEY (`id`) USING BTREE,
+    KEY `idx_circle_time` (`friend_circle_id`, `created_time`) USING BTREE,
+    KEY `idx_father_id` (`father_id`) USING BTREE,
+    KEY `idx_comment_user` (`comment_user_id`) USING BTREE,
+    KEY `idx_belong_user` (`belong_user_id`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci
+    COMMENT ='朋友圈评论表';
+
+

@@ -36,7 +36,7 @@ spring:
         - id: mainRoute  # 每一项路由规则都有一个唯一的id
           uri: lb://main-service
           predicates:
-            - Path=/main/**,/userinfo/**, /friendRequest/**, /friendShip/**
+            - Path=/main/**,/userinfo/**, /friendRequest/**, /friendShip/**, /friendCircle/**, /friendCircleLiked/**, /friendCircleComment/**
       globalcors:
         cors-configurations:
           '[/**]':
