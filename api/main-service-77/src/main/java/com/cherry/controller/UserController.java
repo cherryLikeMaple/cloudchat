@@ -1,6 +1,7 @@
 package com.cherry.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.cherry.api.feign.UserInfoMicroServiceFeign;
 import com.cherry.dto.user.UserUpdateRequest;
 import com.cherry.dto.user.UsersQueryRequest;
 import com.cherry.exceptions.GraceException;
@@ -20,13 +21,15 @@ public class UserController {
 
     @Resource
     private UsersService usersService;
+    @Resource
+    private UserInfoMicroServiceFeign userInfoMicroServiceFeign;
 
     @PostMapping("/update/my")
     public GraceJSONResult modify(@RequestBody UserUpdateRequest userUpdateRequest, HttpServletRequest request) {
         if (userUpdateRequest == null) {
             GraceException.display(ResponseStatusEnum.PARAMS_NULL);
         }
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         Users users = new Users();
         BeanUtils.copyProperties(userUpdateRequest, users);
         users.setId(loginUser.getId());
@@ -42,34 +45,26 @@ public class UserController {
      */
     @GetMapping("/get/login")
     public GraceJSONResult getLoginUser(HttpServletRequest request) {
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         return GraceJSONResult.ok(loginUser);
     }
 
-
-    /**
-     * 获取当前登录用户
-     *
-     * @return
-     */
-    @GetMapping("/internal/user/me")
-    public Users getLoginUser(@RequestHeader("Authorization") String authorization) {
-        return usersService.getLoginUser(authorization);
-    }
+    
 
 
     /**
      * 通过手机号或者账号查询好友
+     *
      * @param request
      * @param usersQueryRequest
      * @return
      */
     @PostMapping("/queryFriend")
     public GraceJSONResult queryFriend(HttpServletRequest request, @RequestBody UsersQueryRequest usersQueryRequest) {
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         String account = usersQueryRequest.getAccount();
         String mobile = usersQueryRequest.getMobile();
-        
+
         if (StringUtils.isAllBlank(account, mobile)) {
             GraceException.display(ResponseStatusEnum.PARAMS_NULL);
         }
@@ -82,7 +77,7 @@ public class UserController {
         if (loginUser.getId().equals(friend.getId())) {
             return GraceJSONResult.errorCustom(ResponseStatusEnum.CAN_NOT_ADD_SELF_FRIEND_ERROR);
         }
-        
+
         return GraceJSONResult.ok(usersService.getUserVo(friend));
     }
 }

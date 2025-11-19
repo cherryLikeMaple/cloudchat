@@ -4,12 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.cherry.controller.FriendRequestController;
+import com.cherry.api.feign.UserInfoMicroServiceFeign;
 import com.cherry.dto.user.AddUsersRequest;
 import com.cherry.enums.FriendRequestVerifyStatus;
 import com.cherry.enums.YesOrNo;
 import com.cherry.exceptions.GraceException;
-import com.cherry.grace.result.GraceJSONResult;
 import com.cherry.grace.result.ResponseStatusEnum;
 import com.cherry.mapper.FriendRequestMapper;
 import com.cherry.mapper.FriendshipMapper;
@@ -24,7 +23,6 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +50,8 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
     private UsersService usersService;
     @Resource
     private FriendshipMapper friendshipMapper;
+    @Resource
+    private UserInfoMicroServiceFeign userInfoMicroServiceFeign;
 
     @Override
     public void validFriendRequest(FriendRequest friendRequest) {
@@ -89,7 +89,7 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
                                                         Long pageSize,
                                                         HttpServletRequest request) {
         // 1. 当前登录用户
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         Long myId = loginUser.getId(); 
 
         // 2. 构造分页参数

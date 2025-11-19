@@ -12,7 +12,6 @@ import com.cherry.pojo.Friendship;
 import com.cherry.pojo.Users;
 import com.cherry.service.*;
 import com.cherry.vo.CircleUserVO;
-import com.cherry.vo.CommentVO;
 import com.cherry.vo.FriendCircleVO;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;

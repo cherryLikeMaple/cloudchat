@@ -1,13 +1,13 @@
 package com.cherry.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cherry.api.feign.UserInfoMicroServiceFeign;
 import com.cherry.enums.YesOrNo;
 import com.cherry.exceptions.GraceException;
 import com.cherry.grace.result.GraceJSONResult;
 import com.cherry.grace.result.ResponseStatusEnum;
 import com.cherry.pojo.Users;
 import com.cherry.service.FriendshipService;
-import com.cherry.service.UsersService;
 import com.cherry.vo.FriendshipVo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ public class FriendShipController {
     @Resource
     private FriendshipService friendshipService;
     @Resource
-    private UsersService usersService;
+    private UserInfoMicroServiceFeign userInfoMicroServiceFeign;
 
     /**
      * 根据id得到单个好友关系
@@ -37,7 +37,7 @@ public class FriendShipController {
      */
     @GetMapping("/get/vo")
     public GraceJSONResult getFriendShipVo(Long friendId, HttpServletRequest request) {
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         if (friendId == null) {
             GraceException.display(ResponseStatusEnum.PARAMS_NULL);
         }
@@ -109,7 +109,7 @@ public class FriendShipController {
         if (StringUtils.isBlank(remark)) {
             GraceException.display(ResponseStatusEnum.PARAMS_NULL);
         }
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         friendshipService.updateFriendRemark(loginUser.getId(), friendId, remark);
         return GraceJSONResult.ok();
     }
@@ -126,7 +126,7 @@ public class FriendShipController {
         if (friendId == null) {
             GraceException.display(ResponseStatusEnum.PARAMS_NULL);
         }
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         friendshipService.updateBlackList(loginUser.getId(), friendId, YesOrNo.YES.type);
         return GraceJSONResult.ok();
     }
@@ -143,7 +143,7 @@ public class FriendShipController {
         if (friendId == null) {
             GraceException.display(ResponseStatusEnum.PARAMS_NULL);
         }
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         friendshipService.updateBlackList(loginUser.getId(), friendId, YesOrNo.NO.type);
         return GraceJSONResult.ok();
     }
@@ -160,7 +160,7 @@ public class FriendShipController {
         if (friendId == null) {
             GraceException.display(ResponseStatusEnum.PARAMS_NULL);
         }
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         friendshipService.deleteFriend(loginUser.getId(), friendId);
         return GraceJSONResult.ok();
     }

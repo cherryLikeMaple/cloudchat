@@ -50,86 +50,86 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         return userVo;
     }
 
-    @Override
-    public Users getLoginUser(HttpServletRequest request) {
-        // 1) 从请求解析 Bearer Token（Authorization: Bearer xxx）
-        String token = TokenUtils.resolveToken(request);
-        if (StringUtils.isBlank(token)) {
-            GraceException.display(UN_LOGIN); // 或 PARAMS_NULL
-        }
-
-        // 2) token -> uid
-        String uid = (String) redisTemplate.opsForValue().get(RedisKeys.LOGIN_TOKEN + token);
-        if (StringUtils.isBlank(uid)) {
-            GraceException.display(UN_LOGIN); // 会话不存在或已过期/被踢
-        }
-
-        // 3) 校验“是否最新 token”
-        String latest = (String) redisTemplate.opsForValue().get(RedisKeys.LOGIN_UID + uid);
-        if (!token.equals(latest)) {
-            GraceException.display(TICKET_INVALID); // 自定义业务码：你的账号在别处登录
-        }
-
-        // 4) 查用户（可加本地/Redis 缓存）
-        Users user = this.getById(uid);
-        if (user == null || Objects.equals(user.getIsDelete(), 1) ||
-                "ban".equalsIgnoreCase(user.getUserRole())) {
-            GraceException.display(UN_LOGIN);
-        }
-
-        // 5) （可选）滑动续期
-        Duration ttl = Duration.ofDays(7);
-        redisTemplate.expire(RedisKeys.LOGIN_TOKEN + token, ttl);
-        redisTemplate.expire(RedisKeys.LOGIN_UID + uid, ttl);
-
-        return user;
-    }
-
-    @Override
-    public Users getLoginUser(String authorization) {
-        // 1) 从请求解析 Bearer Token（Authorization: Bearer xxx）
-        String auth = authorization;
-        if (auth == null) return null;
-        if (auth.startsWith("Bearer ")) {
-            auth = auth.substring(7);
-        }
-        String token = auth.trim();
-        if (StringUtils.isBlank(token)) {
-            GraceException.display(UN_LOGIN); // 或 PARAMS_NULL
-        }
-
-        // 2) token -> uid
-        String uid = (String) redisTemplate.opsForValue().get(RedisKeys.LOGIN_TOKEN + token);
-        if (StringUtils.isBlank(uid)) {
-            GraceException.display(UN_LOGIN); // 会话不存在或已过期/被踢
-        }
-
-        // 3) 校验“是否最新 token”
-        String latest = (String) redisTemplate.opsForValue().get(RedisKeys.LOGIN_UID + uid);
-        if (!token.equals(latest)) {
-            GraceException.display(TICKET_INVALID); // 自定义业务码：你的账号在别处登录
-        }
-
-        // 4) 查用户（可加本地/Redis 缓存）
-        Users user = this.getById(uid);
-        if (user == null || Objects.equals(user.getIsDelete(), 1) ||
-                "ban".equalsIgnoreCase(user.getUserRole())) {
-            GraceException.display(UN_LOGIN);
-        }
-
-        Duration ttl = Duration.ofDays(7);
-        redisTemplate.expire(RedisKeys.LOGIN_TOKEN + token, ttl);
-        redisTemplate.expire(RedisKeys.LOGIN_UID + uid, ttl);
-
-        return user;
-    }
+//    @Override
+//    public Users getLoginUser(HttpServletRequest request) {
+//        // 1) 从请求解析 Bearer Token（Authorization: Bearer xxx）
+//        String token = TokenUtils.resolveToken(request);
+//        if (StringUtils.isBlank(token)) {
+//            GraceException.display(UN_LOGIN); // 或 PARAMS_NULL
+//        }
+//
+//        // 2) token -> uid
+//        String uid = (String) redisTemplate.opsForValue().get(RedisKeys.LOGIN_TOKEN + token);
+//        if (StringUtils.isBlank(uid)) {
+//            GraceException.display(UN_LOGIN); // 会话不存在或已过期/被踢
+//        }
+//
+//        // 3) 校验“是否最新 token”
+//        String latest = (String) redisTemplate.opsForValue().get(RedisKeys.LOGIN_UID + uid);
+//        if (!token.equals(latest)) {
+//            GraceException.display(TICKET_INVALID); // 自定义业务码：你的账号在别处登录
+//        }
+//
+//        // 4) 查用户（可加本地/Redis 缓存）
+//        Users user = this.getById(uid);
+//        if (user == null || Objects.equals(user.getIsDelete(), 1) ||
+//                "ban".equalsIgnoreCase(user.getUserRole())) {
+//            GraceException.display(UN_LOGIN);
+//        }
+//
+//        // 5) （可选）滑动续期
+//        Duration ttl = Duration.ofDays(7);
+//        redisTemplate.expire(RedisKeys.LOGIN_TOKEN + token, ttl);
+//        redisTemplate.expire(RedisKeys.LOGIN_UID + uid, ttl);
+//
+//        return user;
+//    }
+//
+//    @Override
+//    public Users getLoginUser(String authorization) {
+//        // 1) 从请求解析 Bearer Token（Authorization: Bearer xxx）
+//        String auth = authorization;
+//        if (auth == null) return null;
+//        if (auth.startsWith("Bearer ")) {
+//            auth = auth.substring(7);
+//        }
+//        String token = auth.trim();
+//        if (StringUtils.isBlank(token)) {
+//            GraceException.display(UN_LOGIN); // 或 PARAMS_NULL
+//        }
+//
+//        // 2) token -> uid
+//        String uid = (String) redisTemplate.opsForValue().get(RedisKeys.LOGIN_TOKEN + token);
+//        if (StringUtils.isBlank(uid)) {
+//            GraceException.display(UN_LOGIN); // 会话不存在或已过期/被踢
+//        }
+//
+//        // 3) 校验“是否最新 token”
+//        String latest = (String) redisTemplate.opsForValue().get(RedisKeys.LOGIN_UID + uid);
+//        if (!token.equals(latest)) {
+//            GraceException.display(TICKET_INVALID); // 自定义业务码：你的账号在别处登录
+//        }
+//
+//        // 4) 查用户（可加本地/Redis 缓存）
+//        Users user = this.getById(uid);
+//        if (user == null || Objects.equals(user.getIsDelete(), 1) ||
+//                "ban".equalsIgnoreCase(user.getUserRole())) {
+//            GraceException.display(UN_LOGIN);
+//        }
+//
+//        Duration ttl = Duration.ofDays(7);
+//        redisTemplate.expire(RedisKeys.LOGIN_TOKEN + token, ttl);
+//        redisTemplate.expire(RedisKeys.LOGIN_UID + uid, ttl);
+//
+//        return user;
+//    }
 
         @Override
         public QueryWrapper<Users> getQueryWrapper(UsersQueryRequest usersQueryRequest) {
             if (usersQueryRequest == null) {
                 GraceException.display(PARAMS_NULL);
             }
-    
+
             Long id = usersQueryRequest.getId();
             String account = usersQueryRequest.getAccount();
             String mobile = usersQueryRequest.getMobile();
@@ -144,7 +144,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
             String userRole = usersQueryRequest.getUserRole();
             String sortField = usersQueryRequest.getSortField();
             String sortOrder = usersQueryRequest.getSortOrder();
-    
+
             QueryWrapper<Users> usersQueryWrapper = new QueryWrapper<>();
             // 构造查询条件
             usersQueryWrapper.eq(id != null, "id", id);
@@ -159,7 +159,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
             usersQueryWrapper.like(StringUtils.isNotBlank(nickname), "nickname", nickname);
             usersQueryWrapper.like(StringUtils.isNotBlank(realName), "real_name", realName);
             usersQueryWrapper.like(StringUtils.isNotBlank(email), "email", email);
-            
+
             return usersQueryWrapper;
         }
 

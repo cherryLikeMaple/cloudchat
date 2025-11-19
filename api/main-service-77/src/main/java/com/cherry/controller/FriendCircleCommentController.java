@@ -1,11 +1,11 @@
 package com.cherry.controller;
 
+import com.cherry.api.feign.UserInfoMicroServiceFeign;
 import com.cherry.dto.friendcCircleComment.CommentAddRequest;
 import com.cherry.grace.result.GraceJSONResult;
 import com.cherry.grace.result.ResponseStatusEnum;
 import com.cherry.pojo.Users;
 import com.cherry.service.CommentService;
-import com.cherry.service.UsersService;
 import com.cherry.vo.CommentVO;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ import java.util.List;
 public class FriendCircleCommentController {
 
     @Resource
-    private UsersService usersService;
+    private UserInfoMicroServiceFeign userInfoMicroServiceFeign;
     @Resource
     private CommentService commentService;
 
@@ -45,7 +45,7 @@ public class FriendCircleCommentController {
     @PostMapping("/comment/add")
     public GraceJSONResult addComment(@RequestBody CommentAddRequest commentAddRequest,
                                       HttpServletRequest request) {
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         if (loginUser == null) {
             return GraceJSONResult.errorCustom(ResponseStatusEnum.UN_LOGIN);
         }
@@ -57,7 +57,7 @@ public class FriendCircleCommentController {
     public GraceJSONResult deleteComment( Long commentId,
                                          HttpServletRequest request) {
 
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         if (loginUser == null) {
             return GraceJSONResult.errorCustom(ResponseStatusEnum.UN_LOGIN);
         }

@@ -17,8 +17,8 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public interface UsersService extends IService<Users> {
 
-    
-    
+
+
 
     /**
      * entity 转 vo
@@ -27,13 +27,13 @@ public interface UsersService extends IService<Users> {
      */
     UserVo getUserVo(Users user);
 
-    /**
-     * 获取当前登录的用户
-     * @param request
-     * @return
-     */
-    Users getLoginUser(HttpServletRequest request);
-    Users getLoginUser(String authorization);
+//    /**
+//     * 获取当前登录的用户
+//     * @param request
+//     * @return
+//     */
+//    Users getLoginUser(HttpServletRequest request);
+//    Users getLoginUser(String authorization);
 
     /**
      * 获取查询条件

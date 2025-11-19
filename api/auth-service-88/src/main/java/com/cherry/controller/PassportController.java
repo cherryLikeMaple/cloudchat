@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import static com.cherry.grace.result.ResponseStatusEnum.PARAMS_NULL;
-import static com.cherry.grace.result.ResponseStatusEnum.USER_ALREADY_EXIST_ERROR;
 
 /**
  * @author cherry
@@ -25,8 +24,10 @@ public class PassportController {
 
     @Resource
     private UsersService usersService;
+
     /**
      * 用户注册
+     *
      * @param userRegisterRequest
      * @return
      */
@@ -48,6 +49,7 @@ public class PassportController {
 
     /**
      * 用户登录
+     *
      * @param userLoginRequest
      * @return
      */
@@ -62,7 +64,8 @@ public class PassportController {
         if (StringUtils.isAllBlank(userAccount, userPassword)) {
             GraceException.display(PARAMS_NULL);
         }
-        UserVo userVo = usersService.userLogin(userAccount, userPassword);
+        UserVo userVo = usersService.userLogin(userAccount, userPassword
+                , userLoginRequest.getClientType(), userLoginRequest.getDeviceId());
         return GraceJSONResult.ok(userVo);
     }
 
@@ -81,6 +84,7 @@ public class PassportController {
 
     /**
      * 用户注销
+     *
      * @return
      */
     @PostMapping("/logout")
@@ -88,5 +92,27 @@ public class PassportController {
         boolean result = usersService.logout(request);
         return GraceJSONResult.ok(result);
     }
-    
+
+    /**
+     * 用户注销(退出所有终端)
+     *
+     * @return
+     */
+    @PostMapping("/logoutAll")
+    public GraceJSONResult logoutAll(@RequestBody HttpServletRequest request) {
+        boolean result = usersService.logoutAll(request);
+        return GraceJSONResult.ok(result);
+    }
+
+    /**
+     * 内部调用服务接口
+     *
+     * @param authorization
+     * @return
+     */
+    @GetMapping("/internal/user/me")
+    public Users getLoginUser(@RequestHeader("Authorization") String authorization) {
+        return usersService.getLoginUser(authorization);
+    }
+
 }

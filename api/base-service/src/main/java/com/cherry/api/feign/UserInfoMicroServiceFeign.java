@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 /**
  * @author cherry
  */
-@FeignClient(value = "main-service")
+@FeignClient(value = "auth-service")
 public interface UserInfoMicroServiceFeign {
 
-    @GetMapping("/userinfo/internal/user/me")
+    @GetMapping("/passport/internal/user/me")
     Users getLoginUser(@RequestHeader("Authorization") String authorization);
+    
+    
 }

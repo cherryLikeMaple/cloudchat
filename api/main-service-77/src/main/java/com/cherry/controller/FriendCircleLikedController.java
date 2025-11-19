@@ -1,14 +1,14 @@
 package com.cherry.controller;
 
-import com.cherry.dto.friendCycle.CreateFriendCircleDTO;
+import com.cherry.api.feign.UserInfoMicroServiceFeign;
 import com.cherry.grace.result.GraceJSONResult;
 import com.cherry.pojo.Users;
 import com.cherry.service.FriendCircleLikedService;
-import com.cherry.service.FriendCircleService;
-import com.cherry.service.UsersService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -23,14 +23,14 @@ import org.springframework.web.bind.annotation.*;
 public class FriendCircleLikedController {
 
     @Resource
-    private UsersService usersService;
+    private UserInfoMicroServiceFeign userInfoMicroServiceFeign;
     @Resource
     private FriendCircleLikedService friendCircleLikedService;
 
     @PostMapping("/like")
     public GraceJSONResult toggleLike(Long circleId, HttpServletRequest request) {
 
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         Long userId = loginUser.getId();
 
         boolean liked = friendCircleLikedService.likeOrUnlike(userId, circleId);

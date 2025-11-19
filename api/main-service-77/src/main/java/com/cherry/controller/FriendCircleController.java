@@ -1,15 +1,12 @@
 package com.cherry.controller;
 
+import com.cherry.api.feign.UserInfoMicroServiceFeign;
 import com.cherry.dto.friendCycle.CreateFriendCircleDTO;
-import com.cherry.exceptions.GraceException;
 import com.cherry.grace.result.GraceJSONResult;
-import com.cherry.grace.result.ResponseStatusEnum;
 import com.cherry.pojo.Users;
 import com.cherry.service.FriendCircleService;
-import com.cherry.service.UsersService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -24,8 +21,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/friendCircle")
 public class FriendCircleController {
 
+
     @Resource
-    private UsersService usersService;
+    private UserInfoMicroServiceFeign userInfoMicroServiceFeign;
     @Resource
     private FriendCircleService friendCircleService;
 
@@ -38,7 +36,7 @@ public class FriendCircleController {
      */
     @PostMapping("/publish")
     public GraceJSONResult publish(@RequestBody CreateFriendCircleDTO createFriendCircleDTO, HttpServletRequest request) {
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         Long userId = loginUser.getId();
         friendCircleService.publish(createFriendCircleDTO, userId);
         return GraceJSONResult.ok();
@@ -53,7 +51,7 @@ public class FriendCircleController {
                                    HttpServletRequest request) {
 
         // 当前登录用户
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         Long loginUserId = loginUser.getId();
 
         return GraceJSONResult.ok(
@@ -69,7 +67,7 @@ public class FriendCircleController {
                                       @RequestParam Integer page,
                                       @RequestParam Integer pageSize,
                                       HttpServletRequest request) {
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         Long loginUserId = loginUser.getId();
         return GraceJSONResult.ok(
                 friendCircleService.listFriendCircleByUser(loginUserId, friendId, page, pageSize)
@@ -86,7 +84,7 @@ public class FriendCircleController {
     @GetMapping("/get/vo")
     public GraceJSONResult listById(Long circleId,
                                     HttpServletRequest request) {
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         Long loginUserId = loginUser.getId();
         return GraceJSONResult.ok(friendCircleService.getFriendCircle(loginUserId, circleId));
     }

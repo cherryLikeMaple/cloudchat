@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.cherry.enums.YesOrNo;
+import com.cherry.api.feign.UserInfoMicroServiceFeign;
 import com.cherry.exceptions.GraceException;
 import com.cherry.grace.result.ResponseStatusEnum;
 import com.cherry.mapper.FriendshipMapper;
@@ -18,7 +18,6 @@ import com.cherry.vo.UserVo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -42,6 +41,8 @@ public class FriendshipServiceImpl extends ServiceImpl<FriendshipMapper, Friends
     private FriendshipMapper friendshipMapper;
     @Resource
     private UsersService usersService;
+    @Resource
+    private UserInfoMicroServiceFeign userInfoMicroServiceFeign;
 
     @Override
     public FriendshipVo getFriendShipVo(Long friendId, Long myId) {
@@ -76,7 +77,7 @@ public class FriendshipServiceImpl extends ServiceImpl<FriendshipMapper, Friends
                                                   HttpServletRequest request,
                                                   Integer isBlack) {
         // 1.获取当前用户
-        Users loginUser = usersService.getLoginUser(request);
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         Long myId = loginUser.getId();
 
         // 2.构造分页参数
@@ -158,7 +159,7 @@ public class FriendshipServiceImpl extends ServiceImpl<FriendshipMapper, Friends
         LambdaUpdateWrapper<Friendship> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(Friendship::getMyId, myId)
                 .eq(Friendship::getFriendId, friendId);
-        
+
         this.remove(wrapper);
     }
 

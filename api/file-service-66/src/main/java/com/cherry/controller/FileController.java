@@ -7,7 +7,6 @@ import com.cherry.grace.result.ResponseStatusEnum;
 import com.cherry.manage.MinIOConfig;
 import com.cherry.manage.MinIOUtils;
 import com.cherry.pojo.Users;
-import io.minio.MinioClient;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -16,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * @author cherry

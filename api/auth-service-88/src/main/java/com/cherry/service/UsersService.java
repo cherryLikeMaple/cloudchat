@@ -15,10 +15,10 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public interface UsersService extends IService<Users> {
 
-    
 
     /**
-     * 用户登录
+     * 用户注册
+     *
      * @param account
      * @param password
      * @param checkPassword
@@ -28,14 +28,16 @@ public interface UsersService extends IService<Users> {
 
     /**
      * 用户登录
+     *
      * @param account
      * @param password
      * @return
      */
-    UserVo userLogin(String account, String password);
+    UserVo userLogin(String account, String password, String clientType, String deviceId);
 
     /**
      * entity 转 vo
+     *
      * @param user
      * @return
      */
@@ -43,15 +45,31 @@ public interface UsersService extends IService<Users> {
 
     /**
      * 获取当前登录的用户
+     *
      * @param request
      * @return
      */
     Users getLoginUser(HttpServletRequest request);
 
     /**
+     * 内部微服务使用
+     * @param authorization
+     * @return
+     */
+    Users getLoginUser(String authorization);
+
+    /**
      * 用户注销
+     *
      * @param request
      * @return
      */
     boolean logout(HttpServletRequest request);
+
+    /**
+     * 退出所有终端的接口
+     * @param request
+     * @return
+     */
+    boolean logoutAll(HttpServletRequest request);
 }
