@@ -160,4 +160,33 @@ CREATE TABLE `comment`
   COLLATE = utf8mb4_unicode_ci
     COMMENT ='朋友圈评论表';
 
+DROP TABLE IF EXISTS `chat_message`;
+CREATE TABLE `chat_message`
+(
+    `id`                   bigint     NOT NULL AUTO_INCREMENT COMMENT '主键id',
+    `sender_id`            bigint     NOT NULL COMMENT '发送者用户id',
+    `receiver_id`          bigint     NOT NULL COMMENT '接收者id（用户或群）',
+    `receiver_type`        tinyint    NOT NULL                      DEFAULT 1 COMMENT '接收者类型：1=用户，2=群组',
+    `msg`                  varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '文本消息内容',
+    `msg_type`             tinyint    NOT NULL COMMENT '消息类型：1=文本，2=图片，3=视频，4=语音等',
+    `chat_time`            datetime   NOT NULL COMMENT '消息时间（发送/接收时间）',
+
+    `video_path`           varchar(256) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '视频地址',
+    `video_width`          int                                      DEFAULT NULL COMMENT '视频宽度',
+    `video_height`         int                                      DEFAULT NULL COMMENT '视频高度',
+    `video_times`          int                                      DEFAULT NULL COMMENT '视频时长（秒）',
+
+    `voice_path`           varchar(256) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '语音地址',
+    `speak_voice_duration` int                                      DEFAULT NULL COMMENT '语音时长（秒）',
+
+    `is_read`              tinyint(1) NOT NULL                      DEFAULT 0 COMMENT '是否已读：0=未读，1=已读',
+    `is_delete`            tinyint(1) NOT NULL                      DEFAULT 0 COMMENT '是否删除：0=否，1=是',
+
+    PRIMARY KEY (`id`) USING BTREE,
+    KEY `idx_sender_receiver_time` (`sender_id`, `receiver_id`, `chat_time`),
+    KEY `idx_receiver_time` (`receiver_id`, `chat_time`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci
+    COMMENT ='聊天信息存储表';
 
