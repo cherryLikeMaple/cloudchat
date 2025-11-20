@@ -75,13 +75,12 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
             case TEXT:
                 handleText(req, senderId, channel);
                 break;
-                case IMAGE:
-                // TODO: 实现图片消息
-                channel.writeAndFlush(new TextWebSocketFrame("图片消息暂未实现"));
+            case IMAGE:
+                handleImage(req, senderId, channel);
                 break;
             case VIDEO:
-                // TODO: 实现视频消息
-                channel.writeAndFlush(new TextWebSocketFrame("视频消息暂未实现"));
+                // 
+                handleText(req, senderId, channel);
                 break;
             case VOICE:
                 // TODO: 实现语音消息
@@ -90,6 +89,21 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
             default:
                 channel.writeAndFlush(new TextWebSocketFrame("不支持的消息类型：" + msgType));
         }
+    }
+
+    private void handleImage(WsChatSendReq req, Long senderId, Channel channel) {
+
+        if (req.getMediaUrl() == null) {
+            channel.writeAndFlush(new TextWebSocketFrame("传入的url为空"));
+        }
+        if (req.getMediaHeight() == null) {
+            channel.writeAndFlush(new TextWebSocketFrame("传入的height为空"));
+        }
+        if (req.getMediaWidth() == null) {
+            channel.writeAndFlush(new TextWebSocketFrame("传入的width为空"));
+        }
+        
+        handleText(req, senderId, channel);
     }
 
     /**

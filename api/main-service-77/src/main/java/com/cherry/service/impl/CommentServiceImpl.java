@@ -10,12 +10,11 @@ import com.cherry.pojo.Users;
 import com.cherry.service.CommentService;
 import com.cherry.service.FriendCircleService;
 import com.cherry.service.UsersService;
-import com.cherry.vo.CircleUserVO;
+import com.cherry.vo.TinyUserVO;
 import com.cherry.vo.CommentListResult;
 import com.cherry.vo.CommentVO;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -98,11 +97,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         commentVO.setCreateTime(comment.getCreatedTime());
         // 评论者
         Users commentingUsers = usersService.getById(comment.getCommentUserId());
-        commentVO.setCommentUser(CircleUserVO.fromEntity(commentingUsers));
+        commentVO.setCommentUser(TinyUserVO.fromEntity(commentingUsers));
         // 被评论的对象.
         if (comment.getReplyToUserId() != null) {
             Users commentedUsers = usersService.getById(comment.getReplyToUserId());
-            commentVO.setReplyToUser(CircleUserVO.fromEntity(commentedUsers));
+            commentVO.setReplyToUser(TinyUserVO.fromEntity(commentedUsers));
         }
         return commentVO;
     }
@@ -115,11 +114,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         commentVO.setCreateTime(comment.getCreatedTime());
         // 评论者
         Users commentingUsers = userMap.get(comment.getCommentUserId());
-        commentVO.setCommentUser(CircleUserVO.fromEntity(commentingUsers));
+        commentVO.setCommentUser(TinyUserVO.fromEntity(commentingUsers));
         // 被评论的对象.
         if (comment.getReplyToUserId() != null) {
             Users commentedUsers = userMap.get(comment.getReplyToUserId());
-            commentVO.setReplyToUser(CircleUserVO.fromEntity(commentedUsers));
+            commentVO.setReplyToUser(TinyUserVO.fromEntity(commentedUsers));
         }
         return commentVO;
     }

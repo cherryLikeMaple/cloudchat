@@ -9,18 +9,18 @@ import java.io.Serializable;
  * @author cherry
  */
 @Data
-public class CircleUserVO implements Serializable {
+public class TinyUserVO implements Serializable {
 
     private Long userId;
     private String nickname;
     private String face;
 
     // note 使用静态工厂方法, 调用更加干净.
-    public static CircleUserVO fromEntity(Users users) {
+    public static TinyUserVO fromEntity(Users users) {
         if (users == null) {
             return null;
         }
-        CircleUserVO vo = new CircleUserVO();
+        TinyUserVO vo = new TinyUserVO();
         vo.setUserId(users.getId());
         vo.setNickname(users.getNickname());
         vo.setFace(users.getFace());

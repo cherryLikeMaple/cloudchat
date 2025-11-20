@@ -11,6 +11,7 @@
         <result column="msg" property="msg" />
         <result column="msg_type" property="msgType" />
         <result column="chat_time" property="chatTime" />
+        <result column="video_cover_path" property="videoCoverPath"/>
         <result column="video_path" property="videoPath" />
         <result column="video_width" property="videoWidth" />
         <result column="video_height" property="videoHeight" />
@@ -23,7 +24,8 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, sender_id, receiver_id, receiver_type, msg, msg_type, chat_time, video_path, video_width, video_height, video_times, voice_path, speak_voice_duration, is_read, is_delete
+        id
+        , sender_id, receiver_id, receiver_type, msg, msg_type, chat_time, video_cover_path, video_path, video_width, video_height, video_times, voice_path, speak_voice_duration, is_read, is_delete
     </sql>
 
 </mapper>

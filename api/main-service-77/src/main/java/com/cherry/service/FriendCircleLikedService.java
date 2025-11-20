@@ -2,7 +2,7 @@ package com.cherry.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cherry.pojo.FriendCircleLiked;
-import com.cherry.vo.CircleUserVO;
+import com.cherry.vo.TinyUserVO;
 
 import java.util.List;
 
@@ -43,5 +43,5 @@ public interface FriendCircleLikedService extends IService<FriendCircleLiked> {
      * @param circleId
      * @return
      */
-    List<CircleUserVO> getLikedUsers(Long circleId);
+    List<TinyUserVO> getLikedUsers(Long circleId);
 }

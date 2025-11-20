@@ -9,6 +9,7 @@ import com.cherry.grace.result.GraceJSONResult;
 import com.cherry.grace.result.ResponseStatusEnum;
 import com.cherry.pojo.Users;
 import com.cherry.service.UsersService;
+import com.cherry.vo.TinyUserVO;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +38,12 @@ public class UserController {
         return GraceJSONResult.ok(result);
     }
 
+    @PostMapping("/get/user/vo")
+    public GraceJSONResult getUserVo(Long userId) {
+
+        return GraceJSONResult.ok(TinyUserVO.fromEntity(usersService.getById(userId)));
+    }
+
     /**
      * 获取当前登录用户
      *
@@ -48,8 +55,6 @@ public class UserController {
         Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         return GraceJSONResult.ok(loginUser);
     }
-
-    
 
 
     /**

@@ -69,7 +69,7 @@ public class FriendCircleVO implements Serializable {
     /**
      * 点赞的用户数量
      */
-    private List<CircleUserVO> likedUserList;
+    private List<TinyUserVO> likedUserList;
 
     /**
      * 当前登录用户是否已点赞

@@ -2,20 +2,16 @@ package com.cherry.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.cherry.controller.FriendCircleLikedController;
 import com.cherry.exceptions.GraceException;
 import com.cherry.grace.result.ResponseStatusEnum;
 import com.cherry.mapper.FriendCircleLikedMapper;
 import com.cherry.mapper.FriendCircleMapper;
-import com.cherry.pojo.FriendCircle;
 import com.cherry.pojo.FriendCircleLiked;
 import com.cherry.pojo.Users;
 import com.cherry.service.FriendCircleLikedService;
-import com.cherry.service.FriendCircleService;
 import com.cherry.service.UsersService;
-import com.cherry.vo.CircleUserVO;
+import com.cherry.vo.TinyUserVO;
 import jakarta.annotation.Resource;
-import org.junit.jupiter.api.parallel.ResourceLock;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -82,7 +78,7 @@ public class FriendCircleLikedServiceImpl extends ServiceImpl<FriendCircleLikedM
     }
 
     @Override
-    public List<CircleUserVO> getLikedUsers(Long circleId) {
+    public List<TinyUserVO> getLikedUsers(Long circleId) {
         List<FriendCircleLiked> likedList = this.list(
                 new LambdaQueryWrapper<FriendCircleLiked>()
                         .eq(FriendCircleLiked::getFriendCircleId, circleId)
@@ -93,7 +89,7 @@ public class FriendCircleLikedServiceImpl extends ServiceImpl<FriendCircleLikedM
                     .map(FriendCircleLiked::getLikedUserId)
                     .collect(Collectors.toSet());
             List<Users> likeUsers = usersService.listByIds(likeUserIds);
-            return likeUsers.stream().map(CircleUserVO::fromEntity).collect(Collectors.toList());
+            return likeUsers.stream().map(TinyUserVO::fromEntity).collect(Collectors.toList());
         }
         return null;
     }

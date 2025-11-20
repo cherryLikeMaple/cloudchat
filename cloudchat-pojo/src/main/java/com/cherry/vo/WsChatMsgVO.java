@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 /**
  * WebSocket 推送给前端的单条聊天消息 VO
  * 服务端 -> 前端（包括自己和对方所有端）
+ * @author cherry
  */
 @Data
 public class WsChatMsgVO {

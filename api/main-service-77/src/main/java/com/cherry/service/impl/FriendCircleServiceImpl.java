@@ -11,7 +11,7 @@ import com.cherry.pojo.FriendCircle;
 import com.cherry.pojo.Friendship;
 import com.cherry.pojo.Users;
 import com.cherry.service.*;
-import com.cherry.vo.CircleUserVO;
+import com.cherry.vo.TinyUserVO;
 import com.cherry.vo.FriendCircleVO;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -131,7 +131,7 @@ public class FriendCircleServiceImpl extends ServiceImpl<FriendCircleMapper, Fri
         // 设置当前用户是否点赞. 
         friendCircleVO.setLiked(friendCircleLikedService.isLiked(circleId, loginUserId));
         // 设置给这条朋友圈点赞的所有用户, 如果有的话.
-        List<CircleUserVO> likedUsers = friendCircleLikedService.getLikedUsers(circleId);
+        List<TinyUserVO> likedUsers = friendCircleLikedService.getLikedUsers(circleId);
         if (likedUsers != null && !likedUsers.isEmpty()) {
             friendCircleVO.setLikedUserList(likedUsers);
             friendCircleVO.setLikeCount(likedUsers.size());

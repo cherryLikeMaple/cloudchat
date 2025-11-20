@@ -171,6 +171,7 @@ CREATE TABLE `chat_message`
     `msg_type`             tinyint    NOT NULL COMMENT '消息类型：1=文本，2=图片，3=视频，4=语音等',
     `chat_time`            datetime   NOT NULL COMMENT '消息时间（发送/接收时间）',
 
+    `video_cover_url`      varchar(256) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '视频封面地址',
     `video_path`           varchar(256) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '视频地址',
     `video_width`          int                                      DEFAULT NULL COMMENT '视频宽度',
     `video_height`         int                                      DEFAULT NULL COMMENT '视频高度',

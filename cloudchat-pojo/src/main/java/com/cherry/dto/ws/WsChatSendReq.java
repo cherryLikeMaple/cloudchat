@@ -5,6 +5,7 @@ import lombok.Data;
 /**
  * WebSocket 发送聊天消息的 DTO
  * 前端 -> 服务端
+ *
  * @author cherry
  */
 @Data
@@ -53,7 +54,10 @@ public class WsChatSendReq {
      */
     private Integer mediaWidth;
     private Integer mediaHeight;
-
+    /**
+     * 视频特有的封面地址
+     */
+    private String videoCoverPath;
     /**
      * 视频时长（秒），对应 video_times
      */

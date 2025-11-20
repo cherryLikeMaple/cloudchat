@@ -50,6 +50,7 @@ public class ChatMessage implements Serializable {
     private LocalDateTime chatTime;
 
     // ===== 视频相关 =====
+    private String videoCoverPath;
     private String videoPath;
     private Integer videoWidth;
     private Integer videoHeight;

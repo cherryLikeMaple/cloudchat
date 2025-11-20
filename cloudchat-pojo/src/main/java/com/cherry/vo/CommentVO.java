@@ -30,12 +30,12 @@ public class CommentVO implements Serializable {
     /**
      * 评论者信息
      */
-    private CircleUserVO commentUser;
+    private TinyUserVO commentUser;
 
     /**
      * 被回复的用户（楼中楼时用，没有就为 null）
      */
-    private CircleUserVO replyToUser;
+    private TinyUserVO replyToUser;
 
     /**
      * 评论内容
