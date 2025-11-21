@@ -48,10 +48,11 @@ public class WsChatMsgVO {
      */
     private String msg;
 
+    private String mediaPath;
+    private Integer mediaWidth;
+    private Integer mediaHeight;
+
     // ===== 视频相关 =====
-    private String videoPath;
-    private Integer videoWidth;
-    private Integer videoHeight;
     private Integer videoTimes;
 
     // ===== 语音相关 =====
@@ -67,4 +68,6 @@ public class WsChatMsgVO {
      * 是否已读：0=未读，1=已读
      */
     private Integer isRead;
+    
+    
 }

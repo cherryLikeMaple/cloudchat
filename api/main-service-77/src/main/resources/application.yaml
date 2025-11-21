@@ -6,6 +6,12 @@ server:
     max-swallow-size: -1
 
 spring:
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: cloudchat
+    password: cloudchat
+    virtual-host: cloudchat
   jackson:
     time-zone: Asia/Shanghai
   data:

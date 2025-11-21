@@ -1,7 +1,10 @@
-package com.cherry.protocol.dto;
+package com.cherry.ws;
 
-import com.cherry.protocol.enums.MsgType;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * WebSocket 发送聊天消息的 DTO
@@ -10,12 +13,15 @@ import lombok.Data;
  * @author cherry
  */
 @Data
-public class WsChatSendReq {
+public class WsChatSendReq implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * 前端生成的消息唯一 ID，用来去重/匹配回执
      */
     private String msgId;
+
+    private Long senderId;
 
     /**
      * 会话类型：1=单聊，2=群聊
@@ -74,4 +80,7 @@ public class WsChatSendReq {
      * 语音时长（秒），对应 speak_voice_duration
      */
     private Integer voiceDuration;
+
+    private LocalDateTime sendTime;
+    ;
 }

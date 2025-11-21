@@ -85,4 +85,6 @@ public class UserController {
 
         return GraceJSONResult.ok(usersService.getUserVo(friend));
     }
+
+    
 }

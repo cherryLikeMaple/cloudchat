@@ -15,13 +15,18 @@ import java.time.LocalDateTime;
 @TableName("chat_message")
 public class ChatMessage implements Serializable {
 
-    @TableId(type = IdType.AUTO)
+    /**
+     * 主键id
+     */
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
      * 发送者用户id
      */
     private Long senderId;
+
+    private String msgId;
 
     /**
      * 接收者id（用户或群）

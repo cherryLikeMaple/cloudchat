@@ -1,4 +1,4 @@
-package com.cherry.protocol.enums;
+package com.cherry.ws;
 
 public enum MsgType {
     TEXT(1),    // 文本
