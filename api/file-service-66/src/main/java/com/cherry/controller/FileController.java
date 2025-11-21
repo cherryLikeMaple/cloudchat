@@ -245,7 +245,7 @@ public class FileController {
 
 
     /**
-     * 朋友圈上传视频.
+     * 聊天模块上传视频.
      */
     @PostMapping("/uploadChatVideo")
     public GraceJSONResult uploadChatVideo(@RequestParam("file") MultipartFile file,
@@ -357,7 +357,7 @@ public class FileController {
 
 
     /**
-     * 朋友圈上传视频.
+     * 朋友圈上传视频测试.
      *
      * @param file
      * @param request

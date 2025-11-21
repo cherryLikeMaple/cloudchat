@@ -1,5 +1,6 @@
-package com.cherry.dto.ws;
+package com.cherry.protocol.dto;
 
+import com.cherry.protocol.enums.MsgType;
 import lombok.Data;
 
 /**

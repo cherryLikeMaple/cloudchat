@@ -1,8 +1,8 @@
-package com.cherry.netty.websocket;
+package com.cherry.handler;
 
 import cn.hutool.json.JSONUtil;
-import com.cherry.dto.ws.HeartReq;
-import com.cherry.netty.websocket.manage.WsChannelManager;
+import com.cherry.protocol.dto.HeartReq;
+import com.cherry.session.WsChannelManager;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

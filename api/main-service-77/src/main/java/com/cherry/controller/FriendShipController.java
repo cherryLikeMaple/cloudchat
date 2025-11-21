@@ -164,4 +164,10 @@ public class FriendShipController {
         friendshipService.deleteFriend(loginUser.getId(), friendId);
         return GraceJSONResult.ok();
     }
+
+    @GetMapping("/isBlack")
+    public GraceJSONResult isBlack(Long myUserId, Long friendId) {
+        // 3种情况 1.我拉黑他 2.他拉黑我 3.互相都拉黑了
+        return GraceJSONResult.ok(friendshipService.isBlack(myUserId, friendId));
+    }
 }

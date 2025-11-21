@@ -1,4 +1,4 @@
-package com.cherry.vo;
+package com.cherry.protocol.vo;
 
 import lombok.Data;
 

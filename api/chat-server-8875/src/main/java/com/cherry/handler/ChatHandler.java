@@ -1,12 +1,14 @@
-package com.cherry.netty.websocket;
+package com.cherry.handler;
 
 import cn.hutool.json.JSONUtil;
-import com.cherry.dto.ws.MsgType;
-import com.cherry.dto.ws.WsChatSendReq;
-import com.cherry.netty.websocket.manage.WsChannelManager;
-import com.cherry.netty.websocket.manage.WsSession;
+import com.cherry.protocol.enums.MsgType;
+import com.cherry.protocol.dto.WsChatSendReq;
+import com.cherry.grace.result.GraceJSONResult;
+import com.cherry.session.WsChannelManager;
+import com.cherry.session.WsSession;
 import com.cherry.service.ChatMessageService;
-import com.cherry.vo.WsChatMsgVO;
+import com.cherry.utils.OkHttpUtil;
+import com.cherry.protocol.vo.WsChatMsgVO;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -79,7 +81,6 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
                 handleImage(req, senderId, channel);
                 break;
             case VIDEO:
-                // 
                 handleText(req, senderId, channel);
                 break;
             case VOICE:
@@ -102,7 +103,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
         if (req.getMediaWidth() == null) {
             channel.writeAndFlush(new TextWebSocketFrame("传入的width为空"));
         }
-        
+
         handleText(req, senderId, channel);
     }
 
@@ -110,6 +111,14 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
      * 处理文本消息的“单发单聊”
      */
     private void handleText(WsChatSendReq req, Long senderId, Channel channel) {
+        // 判断是否为拉黑好友.
+        // note 当前体系不是spring cloud, 所以可以是要http工具包. 直接给本地服务发送请求. 
+        GraceJSONResult jsonResult = OkHttpUtil.get("http://127.0.0.1:1000/friendShip/isBlack?myUserId=" + senderId + "&friendId=" + req.getReceiverId());
+        boolean isBlack = (boolean) jsonResult.getData();
+        if (isBlack) {
+            channel.writeAndFlush(new TextWebSocketFrame("对方已将你拉黑或你已经把对方拉黑，无法发送消息"));
+            return;
+        }
         WsChatMsgVO vo;
         try {
             vo = chatMessageService.sendSingleMessage(senderId, req);

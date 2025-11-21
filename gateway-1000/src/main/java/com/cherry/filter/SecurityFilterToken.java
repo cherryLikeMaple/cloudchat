@@ -46,15 +46,15 @@ public class SecurityFilterToken implements GlobalFilter, Ordered {
     private RedisTemplate redisTemplate;
 
     private static final List<String> WHITE = List.of(
-            "/passport/login", "/passport/register",
+            "/passport/login", "/passport/register", "/friendShip/isBlack",
             // 网关剥前缀的情况
             "/v3/api-docs", "/v3/api-docs/**",
             // 带服务前缀的情况
-            "/**/v3/api-docs",                 
+            "/**/v3/api-docs",
             "/swagger-ui.html", "/swagger-ui/**",
             "/actuator/**", "/static/**", "/doc.html", "/**/doc.html",
             // 需要前缀时
-            "/auth-service/v3/api-docs"       
+            "/auth-service/v3/api-docs"
     );
 
 
@@ -70,7 +70,7 @@ public class SecurityFilterToken implements GlobalFilter, Ordered {
                 return chain.filter(exchange);
             }
         }
-        
+
         //到达此处, 说明代码被拦截了
         ServerHttpRequest request = exchange.getRequest();
         HttpHeaders headers = request.getHeaders();
@@ -89,10 +89,10 @@ public class SecurityFilterToken implements GlobalFilter, Ordered {
         } else {
             return chain.filter(exchange);
         }
-        
+
         return RenderErrorUtils.display(exchange, ResponseStatusEnum.UN_LOGIN);
     }
-    
+
 
     @Override
     public int getOrder() {

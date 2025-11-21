@@ -1,10 +1,10 @@
-package com.cherry.netty.websocket;
+package com.cherry.handler;
 
 import cn.hutool.json.JSONUtil;
 import com.cherry.constant.RedisKeys;
-import com.cherry.dto.ws.WsAuthReq;
-import com.cherry.netty.websocket.manage.WsChannelManager;
-import com.cherry.netty.websocket.manage.WsSession;
+import com.cherry.protocol.dto.WsAuthReq;
+import com.cherry.session.WsChannelManager;
+import com.cherry.session.WsSession;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -12,7 +12,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 /**

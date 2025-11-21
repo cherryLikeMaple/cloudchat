@@ -1,4 +1,4 @@
-package com.cherry.netty.websocket.manage;
+package com.cherry.session;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;

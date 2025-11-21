@@ -1,9 +1,8 @@
-package com.cherry.netty;
+package com.cherry.server;
 
-import com.cherry.netty.websocket.AuthHandler;
-import com.cherry.netty.websocket.ChatHandler;
-import com.cherry.netty.websocket.HeartbeatHandler;
-import com.cherry.netty.websocket.WSServerInitializer;
+import com.cherry.handler.AuthHandler;
+import com.cherry.handler.ChatHandler;
+import com.cherry.handler.HeartbeatHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;

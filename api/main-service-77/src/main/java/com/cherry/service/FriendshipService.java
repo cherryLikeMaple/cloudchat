@@ -56,4 +56,12 @@ public interface FriendshipService extends IService<Friendship> {
      * @param friendId
      */
     void deleteFriend(Long myId, Long friendId);
+
+    /**
+     * 判断是否在黑名单中
+     * @param myId
+     * @param friendId
+     * @return
+     */
+    boolean isBlack(Long myId, Long friendId);
 }

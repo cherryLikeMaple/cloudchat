@@ -1,4 +1,4 @@
-package com.cherry.dto.ws;
+package com.cherry.protocol.enums;
 
 public enum ChatType {
     SINGLE(1),  // 单聊

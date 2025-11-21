@@ -1,4 +1,4 @@
-package com.cherry.dto.ws;
+package com.cherry.protocol.enums;
 
 public enum ClientType {
     WEB("web", "网页端"),

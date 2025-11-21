@@ -163,5 +163,24 @@ public class FriendshipServiceImpl extends ServiceImpl<FriendshipMapper, Friends
         this.remove(wrapper);
     }
 
+    @Override
+    public boolean isBlack(Long myId, Long friendId) {
+        LambdaUpdateWrapper<Friendship> wrapper1 = new LambdaUpdateWrapper<>();
+        wrapper1.eq(Friendship::getMyId, myId)
+                .eq(Friendship::getFriendId, friendId)
+                .eq(Friendship::getIsBlack, 1);
+
+        Friendship friendship1 = this.getOne(wrapper1);
+
+        LambdaUpdateWrapper<Friendship> wrapper2 = new LambdaUpdateWrapper<>();
+        wrapper2.eq(Friendship::getMyId, friendId)
+                .eq(Friendship::getFriendId, myId)
+                .eq(Friendship::getIsBlack, 1);
+
+        Friendship friendship2 = this.getOne(wrapper2);
+        
+        return friendship1 != null || friendship2 != null;
+    }
+
 
 }

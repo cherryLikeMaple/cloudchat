@@ -1,5 +1,8 @@
-package com.cherry.netty.websocket;
+package com.cherry.server;
 
+import com.cherry.handler.AuthHandler;
+import com.cherry.handler.ChatHandler;
+import com.cherry.handler.HeartbeatHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -8,7 +11,6 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleStateHandler;
-import jakarta.annotation.Resource;
 
 import java.util.concurrent.TimeUnit;
 

@@ -1,10 +1,10 @@
 package com.cherry.service.impl;
 
-import com.cherry.dto.ws.ChatType;
-import com.cherry.dto.ws.WsChatSendReq;
+import com.cherry.protocol.enums.ChatType;
+import com.cherry.protocol.dto.WsChatSendReq;
 import com.cherry.pojo.ChatMessage;
 import com.cherry.service.ChatMessageService;
-import com.cherry.vo.WsChatMsgVO;
+import com.cherry.protocol.vo.WsChatMsgVO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

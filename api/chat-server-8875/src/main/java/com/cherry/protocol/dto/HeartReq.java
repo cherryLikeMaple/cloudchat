@@ -1,4 +1,4 @@
-package com.cherry.dto.ws;
+package com.cherry.protocol.dto;
 
 import lombok.Data;
 

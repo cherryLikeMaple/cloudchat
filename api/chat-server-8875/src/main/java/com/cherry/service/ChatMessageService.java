@@ -1,7 +1,7 @@
 package com.cherry.service;
 
-import com.cherry.dto.ws.WsChatSendReq;
-import com.cherry.vo.WsChatMsgVO;
+import com.cherry.protocol.dto.WsChatSendReq;
+import com.cherry.protocol.vo.WsChatMsgVO;
 
 /**
  * <p>
