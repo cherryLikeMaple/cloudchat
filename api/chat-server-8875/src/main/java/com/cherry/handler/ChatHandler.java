@@ -75,7 +75,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
         }
 
         req.setSenderId(senderId);
-        req.setSendTime(now);
+        req.setChatTime(now);
         // 4. 根据 msgType 分发
         MsgType msgType = req.getMsgType();
         if (msgType == null) {

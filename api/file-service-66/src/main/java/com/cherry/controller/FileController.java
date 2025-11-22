@@ -365,8 +365,8 @@ public class FileController {
      * @throws Exception
      */
     @PostMapping("/uploadChatVideoDemo")
-    public GraceJSONResult uploadFriendCircleVideoDemo(@RequestParam("file") MultipartFile file,
-                                                       HttpServletRequest request) throws Exception {
+    public GraceJSONResult uploadChatVideoDemo(@RequestParam("file") MultipartFile file,
+                                               HttpServletRequest request) throws Exception {
 
         // 1. 获取登录用户
         Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));

@@ -24,7 +24,7 @@ public class RabbitMQConsumer {
     public void receiveText(String msgJson) {
         try {
             WsChatSendReq wsChatSendReq = JSONUtil.toBean(msgJson, WsChatSendReq.class);
-            chatMessageService.save(chatMessageService.dtoToEntity(wsChatSendReq));
+            chatMessageService.saveMsg(chatMessageService.dtoToEntity(wsChatSendReq));
             log.info("消费成功：{}", wsChatSendReq);
         } catch (Exception e) {
             log.error("消费消息失败，msg={}", msgJson, e);

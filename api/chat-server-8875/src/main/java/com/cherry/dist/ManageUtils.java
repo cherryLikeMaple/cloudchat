@@ -2,7 +2,7 @@ package com.cherry.dist;
 
 import cn.hutool.json.JSONUtil;
 import com.cherry.grace.result.GraceJSONResult;
-import com.cherry.protocol.vo.WsChatMsgVO;
+import com.cherry.ws.WsChatMsgVO;
 import com.cherry.session.WsChannelManager;
 import com.cherry.utils.OkHttpUtil;
 import com.cherry.ws.MsgType;
@@ -22,11 +22,11 @@ public class ManageUtils {
         WsChatMsgVO vo = new WsChatMsgVO();
 
         // === 必要字段 ===
-        vo.setClientMsgId(req.getMsgId());
+        vo.setMsgId(req.getMsgId());
         vo.setChatType(req.getChatType());
         vo.setSenderId(req.getSenderId());
         vo.setReceiverId(req.getReceiverId());
-        vo.setReceiverType(req.getChatType()); // 1=单聊，2=群聊
+        vo.setChatType(req.getChatType());
 
         // === 消息类型 ===
         if (req.getMsgType() != null) {
@@ -34,7 +34,7 @@ public class ManageUtils {
         }
 
         // === 文本内容 ===
-        vo.setMsg(req.getContent());
+        vo.setContent(req.getContent());
 
         // === 时间（最好用服务器时间）===
         vo.setChatTime(LocalDateTime.now());
@@ -44,21 +44,21 @@ public class ManageUtils {
 
         // === 图片 or 视频 ===
         if (req.getMsgType() == MsgType.IMAGE || req.getMsgType() == MsgType.VIDEO) {
-            vo.setMediaPath(req.getMediaUrl());
+            vo.setMediaUrl(req.getMediaUrl());
             vo.setMediaWidth(req.getMediaWidth());
             vo.setMediaHeight(req.getMediaHeight());
         }
 
         // === 视频特有字段 ===
         if (req.getMsgType() == MsgType.VIDEO) {
-            vo.setMediaPath(req.getMediaUrl());
-            vo.setVideoTimes(req.getMediaDuration());
+            vo.setMediaUrl(req.getMediaUrl());
+            vo.setVideoTimes(req.getVideoDuration());
         }
 
         // === 语音字段 ===
         if (req.getMsgType() == MsgType.VOICE) {
-            vo.setVoicePath(req.getVoiceUrl());
-            vo.setSpeakVoiceDuration(req.getVoiceDuration());
+            vo.setVoiceUrl(req.getVoiceUrl());
+            vo.setVoiceDuration(req.getVoiceDuration());
         }
 
         return vo;

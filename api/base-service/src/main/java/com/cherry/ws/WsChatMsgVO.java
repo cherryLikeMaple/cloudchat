@@ -1,4 +1,4 @@
-package com.cherry.protocol.vo;
+package com.cherry.ws;
 
 import lombok.Data;
 
@@ -20,7 +20,7 @@ public class WsChatMsgVO {
     /**
      * 前端发来的 msgId（方便前端做匹配）
      */
-    private String clientMsgId;
+    private String msgId;
 
     /**
      * 会话类型：1=单聊，2=群聊
@@ -31,13 +31,11 @@ public class WsChatMsgVO {
      * 发送者 / 接收者
      */
     private Long senderId;
-    private Long receiverId;
-
     /**
-     * 接收者类型：1=用户，2=群组
+     * 群聊: 群聊id, 单聊: 好友id
      */
-    private Integer receiverType;
-
+    private Long receiverId;
+    
     /**
      * 消息类型
      */
@@ -46,18 +44,19 @@ public class WsChatMsgVO {
     /**
      * 文本消息内容
      */
-    private String msg;
+    private String content;
 
-    private String mediaPath;
+    private String mediaUrl;
     private Integer mediaWidth;
     private Integer mediaHeight;
 
     // ===== 视频相关 =====
     private Integer videoTimes;
+    private String videoCoverUrl;
 
     // ===== 语音相关 =====
-    private String voicePath;
-    private Integer speakVoiceDuration;
+    private String voiceUrl;
+    private Integer voiceDuration;
 
     /**
      * 消息时间

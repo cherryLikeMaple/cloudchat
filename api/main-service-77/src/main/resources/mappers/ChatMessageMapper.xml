@@ -5,29 +5,27 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.cherry.pojo.ChatMessage">
         <id column="id" property="id" />
-        <result column="msg_id" property="msgId"/>
+        <result column="msg_id" property="msgId" />
         <result column="sender_id" property="senderId" />
         <result column="receiver_id" property="receiverId" />
-        <result column="receiver_type" property="receiverType" />
-        <result column="msg" property="msg" />
+        <result column="chat_type" property="chatType" />
+        <result column="content" property="content" />
         <result column="msg_type" property="msgType" />
         <result column="chat_time" property="chatTime" />
-        <result column="video_cover_path" property="videoCoverPath"/>
-        <result column="video_path" property="videoPath" />
-        <result column="video_width" property="videoWidth" />
-        <result column="video_height" property="videoHeight" />
+        <result column="video_cover_url" property="videoCoverUrl" />
+        <result column="media_url" property="mediaUrl" />
+        <result column="media_width" property="mediaWidth" />
+        <result column="media_height" property="mediaHeight" />
         <result column="video_times" property="videoTimes" />
-        <result column="voice_path" property="voicePath" />
-        <result column="speak_voice_duration" property="speakVoiceDuration" />
+        <result column="voice_url" property="voiceUrl" />
+        <result column="voice_duration" property="voiceDuration" />
         <result column="is_read" property="isRead" />
         <result column="is_delete" property="isDelete" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id
-        , msg_id
-        , sender_id, receiver_id, receiver_type, msg, msg_type, chat_time, video_cover_path, video_path, video_width, video_height, video_times, voice_path, speak_voice_duration, is_read, is_delete
+        id, msg_id, sender_id, receiver_id, chat_type, content, msg_type, chat_time, video_cover_url, media_url, media_width, media_height, video_times, voice_url, voice_duration, is_read, is_delete
     </sql>
 
 </mapper>

@@ -64,11 +64,11 @@ public class WsChatSendReq implements Serializable {
     /**
      * 视频特有的封面地址
      */
-    private String videoCoverPath;
+    private String videoCoverUrl;
     /**
      * 视频时长（秒），对应 video_times
      */
-    private Integer mediaDuration;
+    private Integer videoDuration;
 
     // ===== 语音字段 =====
     /**
@@ -81,6 +81,6 @@ public class WsChatSendReq implements Serializable {
      */
     private Integer voiceDuration;
 
-    private LocalDateTime sendTime;
-    ;
+    private LocalDateTime chatTime;
+    
 }
