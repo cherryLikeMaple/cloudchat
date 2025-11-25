@@ -4,6 +4,8 @@ target/
 !**/src/test/**/target/
 
 ### IntelliJ IDEA ###
+bootstrap-prod.yaml
+bootstrap-prod.yml
 application-prod.yml
 application-prod.yaml
 *.local.yaml

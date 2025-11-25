@@ -38,10 +38,26 @@ public class UserController {
         return GraceJSONResult.ok(result);
     }
 
-    @PostMapping("/get/user/vo")
-    public GraceJSONResult getUserVo(Long userId) {
+    /**
+     * 返回朋友圈的用户信息.
+     *
+     * @param userId
+     * @return
+     */
+    @PostMapping("/get/user/circle/evo")
+    public GraceJSONResult getCircleUserVo(Long userId) {
 
         return GraceJSONResult.ok(TinyUserVO.fromEntity(usersService.getById(userId)));
+    }
+
+    /**
+     * 返回用户的vo类型.
+     * @param userId
+     * @return
+     */
+    @PostMapping("/get/user/vo")
+    public GraceJSONResult getUserVo(Long userId) {
+        return GraceJSONResult.ok(usersService.getUserVo(usersService.getById(userId)));
     }
 
     /**
@@ -86,5 +102,5 @@ public class UserController {
         return GraceJSONResult.ok(usersService.getUserVo(friend));
     }
 
-    
+
 }

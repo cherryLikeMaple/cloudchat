@@ -7,7 +7,6 @@ import com.cherry.grace.result.ResponseStatusEnum;
 import com.cherry.manage.MinIOConfig;
 import com.cherry.manage.MinIOUtils;
 import com.cherry.pojo.Users;
-import com.cherry.util.FfmpegUtils;
 import com.cherry.vo.MediaUploadVO;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -244,116 +243,116 @@ public class FileController {
     }
 
 
-    /**
-     * 聊天模块上传视频.
-     */
-    @PostMapping("/uploadChatVideo")
-    public GraceJSONResult uploadChatVideo(@RequestParam("file") MultipartFile file,
-                                           HttpServletRequest request) throws Exception {
-
-        // 1. 获取登录用户
-        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
-        Long userId = loginUser.getId();
-
-        // 2. 原始文件名校验
-        String originalFilename = file.getOriginalFilename();
-        if (StringUtils.isBlank(originalFilename)) {
-            return GraceJSONResult.errorCustom(ResponseStatusEnum.FILE_UPLOAD_FAILD);
-        }
-
-        // 3. 生成不重复文件名
-        String suffix = "";
-        int dotIndex = originalFilename.lastIndexOf(".");
-        if (dotIndex >= 0) {
-            suffix = originalFilename.substring(dotIndex).toLowerCase();
-        }
-        // 如果需要可做格式校验：mp4/mov 等
-        // if (!suffix.matches("\\.(mp4|mov|avi|mkv|flv)$")) { ... }
-
-        String newFileName = UUID.randomUUID().toString().replace("-", "") + suffix;
-
-        // ============= 先保存到本地临时文件，给 ffmpeg 用 =============
-
-        File tempVideoFile = File.createTempFile("fc_video_", suffix);
-        file.transferTo(tempVideoFile);
-
-        // 4. 用 ffmpeg 获取视频信息
-        FfmpegUtils.VideoInfo videoInfo;
-        try {
-            videoInfo = FfmpegUtils.getVideoInfo(tempVideoFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-            tempVideoFile.delete();
-            return GraceJSONResult.errorCustom(ResponseStatusEnum.FILE_UPLOAD_FAILD);
-        }
-
-        // 5. 生成封面图临时文件
-        File tempCoverFile = File.createTempFile("fc_video_cover_", ".jpg");
-        try {
-            FfmpegUtils.generateCover(tempVideoFile, tempCoverFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-            tempVideoFile.delete();
-            tempCoverFile.delete();
-            return GraceJSONResult.errorCustom(ResponseStatusEnum.FILE_UPLOAD_FAILD);
-        }
-
-        // ============= 上传到 MinIO =============
-
-        // 视频存储路径：friend_circle/video/{userId}/{newFileName}
-        String videoObjectName = String.join("/",
-                "chat",
-                "video",
-                String.valueOf(userId),
-                newFileName
-        );
-
-        // 封面图路径：friend_circle/video_cover/{userId}/{xxxx}.jpg
-        String coverFileName = newFileName + "_cover.jpg";
-        String coverObjectName = String.join("/",
-                "chat",
-                "video_cover",
-                String.valueOf(userId),
-                coverFileName
-        );
-
-        // 7. 上传视频
-        try (InputStream videoIn = new FileInputStream(tempVideoFile)) {
-            minIOUtils.uploadFile(minIOConfig.getBucketName(), videoObjectName, videoIn);
-        }
-
-        // 8. 上传封面图
-        try (InputStream coverIn = new FileInputStream(tempCoverFile)) {
-            minIOUtils.uploadFile(minIOConfig.getBucketName(), coverObjectName, coverIn);
-        }
-
-        // 9. 删除本地临时文件
-        tempVideoFile.delete();
-        tempCoverFile.delete();
-
-        // 10. 拼接访问 URL
-        String videoUrl = minIOConfig.getFileHost()
-                + "/"
-                + minIOConfig.getBucketName()
-                + "/"
-                + videoObjectName;
-
-        String coverUrl = minIOConfig.getFileHost()
-                + "/"
-                + minIOConfig.getBucketName()
-                + "/"
-                + coverObjectName;
-
-        // 11. 封装返回 VO
-        MediaUploadVO vo = new MediaUploadVO();
-        vo.setMediaUrl(videoUrl);
-        vo.setCoverUrl(coverUrl);
-        vo.setWidth(videoInfo.getWidth());
-        vo.setHeight(videoInfo.getHeight());
-        vo.setDuration(videoInfo.getDuration());
-
-        return GraceJSONResult.ok(vo);
-    }
+//    /**
+//     * 聊天模块上传视频.
+//     */
+//    @PostMapping("/uploadChatVideo")
+//    public GraceJSONResult uploadChatVideo(@RequestParam("file") MultipartFile file,
+//                                           HttpServletRequest request) throws Exception {
+//
+//        // 1. 获取登录用户
+//        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
+//        Long userId = loginUser.getId();
+//
+//        // 2. 原始文件名校验
+//        String originalFilename = file.getOriginalFilename();
+//        if (StringUtils.isBlank(originalFilename)) {
+//            return GraceJSONResult.errorCustom(ResponseStatusEnum.FILE_UPLOAD_FAILD);
+//        }
+//
+//        // 3. 生成不重复文件名
+//        String suffix = "";
+//        int dotIndex = originalFilename.lastIndexOf(".");
+//        if (dotIndex >= 0) {
+//            suffix = originalFilename.substring(dotIndex).toLowerCase();
+//        }
+//        // 如果需要可做格式校验：mp4/mov 等
+//        // if (!suffix.matches("\\.(mp4|mov|avi|mkv|flv)$")) { ... }
+//
+//        String newFileName = UUID.randomUUID().toString().replace("-", "") + suffix;
+//
+//        // ============= 先保存到本地临时文件，给 ffmpeg 用 =============
+//
+//        File tempVideoFile = File.createTempFile("fc_video_", suffix);
+//        file.transferTo(tempVideoFile);
+//
+//        // 4. 用 ffmpeg 获取视频信息
+//        FfmpegUtils.VideoInfo videoInfo;
+//        try {
+//            videoInfo = FfmpegUtils.getVideoInfo(tempVideoFile);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            tempVideoFile.delete();
+//            return GraceJSONResult.errorCustom(ResponseStatusEnum.FILE_UPLOAD_FAILD);
+//        }
+//
+//        // 5. 生成封面图临时文件
+//        File tempCoverFile = File.createTempFile("fc_video_cover_", ".jpg");
+//        try {
+//            FfmpegUtils.generateCover(tempVideoFile, tempCoverFile);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            tempVideoFile.delete();
+//            tempCoverFile.delete();
+//            return GraceJSONResult.errorCustom(ResponseStatusEnum.FILE_UPLOAD_FAILD);
+//        }
+//
+//        // ============= 上传到 MinIO =============
+//
+//        // 视频存储路径：friend_circle/video/{userId}/{newFileName}
+//        String videoObjectName = String.join("/",
+//                "chat",
+//                "video",
+//                String.valueOf(userId),
+//                newFileName
+//        );
+//
+//        // 封面图路径：friend_circle/video_cover/{userId}/{xxxx}.jpg
+//        String coverFileName = newFileName + "_cover.jpg";
+//        String coverObjectName = String.join("/",
+//                "chat",
+//                "video_cover",
+//                String.valueOf(userId),
+//                coverFileName
+//        );
+//
+//        // 7. 上传视频
+//        try (InputStream videoIn = new FileInputStream(tempVideoFile)) {
+//            minIOUtils.uploadFile(minIOConfig.getBucketName(), videoObjectName, videoIn);
+//        }
+//
+//        // 8. 上传封面图
+//        try (InputStream coverIn = new FileInputStream(tempCoverFile)) {
+//            minIOUtils.uploadFile(minIOConfig.getBucketName(), coverObjectName, coverIn);
+//        }
+//
+//        // 9. 删除本地临时文件
+//        tempVideoFile.delete();
+//        tempCoverFile.delete();
+//
+//        // 10. 拼接访问 URL
+//        String videoUrl = minIOConfig.getFileHost()
+//                + "/"
+//                + minIOConfig.getBucketName()
+//                + "/"
+//                + videoObjectName;
+//
+//        String coverUrl = minIOConfig.getFileHost()
+//                + "/"
+//                + minIOConfig.getBucketName()
+//                + "/"
+//                + coverObjectName;
+//
+//        // 11. 封装返回 VO
+//        MediaUploadVO vo = new MediaUploadVO();
+//        vo.setMediaUrl(videoUrl);
+//        vo.setCoverUrl(coverUrl);
+//        vo.setWidth(videoInfo.getWidth());
+//        vo.setHeight(videoInfo.getHeight());
+//        vo.setDuration(videoInfo.getDuration());
+//
+//        return GraceJSONResult.ok(vo);
+//    }
 
 
     /**

@@ -25,11 +25,11 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="cloudchat204.141.218.104" uuid="2f2a9349-9534-4fad-b54d-1724c0ade52f">
+    <data-source source="LOCAL" name="cloudchat" uuid="2965fe3b-8a07-4ba6-b478-19a24a86751c">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://204.141.218.104:3306</jdbc-url>
+      <jdbc-url>jdbc:mysql://204.141.218.158:3306</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
@@ -37,11 +37,11 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="cloudchat" uuid="e22dce58-f5a8-484d-81b9-f64abe26b783">
+    <data-source source="LOCAL" name="cloudchat_redis" uuid="1598e840-4088-439a-a9ac-8c7abcebbe8b">
       <driver-ref>redis</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>jdbc.RedisDriver</jdbc-driver>
-      <jdbc-url>jdbc:redis://204.141.218.104:6379/0</jdbc-url>
+      <jdbc-url>jdbc:redis://204.141.218.158:6379/0</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />

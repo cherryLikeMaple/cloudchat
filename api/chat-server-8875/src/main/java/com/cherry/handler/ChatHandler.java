@@ -28,6 +28,8 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 
     @Resource
     private RabbitTemplate rabbitTemplate;
+    @Resource
+    private ManageUtils manageUtils;
 
     @PostConstruct
     public void init() {
@@ -91,7 +93,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 
         switch (msgType) {
             case TEXT:
-                ManageUtils.send(req, senderId, channel);
+                manageUtils.send(req, senderId, channel);
                 break;
             case IMAGE:
                 handleMedia(req, senderId, channel);
@@ -122,7 +124,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
             channel.writeAndFlush(new TextWebSocketFrame("传入的width为空"));
         }
 
-        ManageUtils.send(req, senderId, channel);
+        manageUtils.send(req, senderId, channel);
     }
 
     /**

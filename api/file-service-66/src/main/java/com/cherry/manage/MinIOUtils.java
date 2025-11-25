@@ -18,8 +18,6 @@ public class MinIOUtils {
 
     @Resource
     private MinioClient minioClient;
-    @Resource
-    private MinIOConfig minIOConfig;
 
     /**
      * 通过流上传文件

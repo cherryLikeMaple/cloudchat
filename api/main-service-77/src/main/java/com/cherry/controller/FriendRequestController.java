@@ -1,15 +1,19 @@
 package com.cherry.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cherry.api.feign.UserInfoMicroServiceFeign;
+import com.cherry.constant.RedisKeys;
 import com.cherry.dto.user.AddUsersRequest;
 import com.cherry.exceptions.GraceException;
 import com.cherry.grace.result.GraceJSONResult;
 import com.cherry.grace.result.ResponseStatusEnum;
 import com.cherry.pojo.FriendRequest;
+import com.cherry.pojo.Users;
 import com.cherry.service.FriendRequestService;
 import com.cherry.vo.FriendRequestVo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -18,12 +22,17 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/friendRequest")
 public class FriendRequestController {
-    
+
     @Resource
     private FriendRequestService friendRequestService;
+    @Resource
+    private UserInfoMicroServiceFeign userInfoMicroServiceFeign;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
 
     /**
      * 根据id得到好友请求数据
+     *
      * @param id
      * @return
      */
@@ -38,17 +47,19 @@ public class FriendRequestController {
 
     /**
      * 添加好友请求
+     *
      * @param addUsersRequest
      * @return
      */
     @PostMapping("/add")
-    public GraceJSONResult add(@RequestBody AddUsersRequest addUsersRequest) {  
+    public GraceJSONResult add(@RequestBody AddUsersRequest addUsersRequest) {
         friendRequestService.addFriendRequest(addUsersRequest);
         return GraceJSONResult.ok();
     }
 
     /**
      * 查看好友请求列表.
+     *
      * @param currentPage
      * @param pageSize
      * @param request
@@ -66,6 +77,7 @@ public class FriendRequestController {
 
     /**
      * 同意好友请求
+     *
      * @param friendRequestId
      * @param friendRemark
      * @return
@@ -78,6 +90,7 @@ public class FriendRequestController {
 
     /**
      * 拒绝好友请求
+     *
      * @param friendRequestId
      * @return
      */
@@ -86,6 +99,31 @@ public class FriendRequestController {
         friendRequestService.refuseFriendRequest(friendRequestId);
         return GraceJSONResult.ok();
     }
-    
-    
+
+    /**
+     * 查看当前请求我好友的数量.
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/notifyFlag")
+    public GraceJSONResult notifyFlag(HttpServletRequest request) {
+
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
+        Long myId = loginUser.getId();
+        String key = RedisKeys.FRIEND_REQUEST_NOTIFY + myId;
+        Boolean hasKey = stringRedisTemplate.hasKey(key);
+        boolean needShowBubble = Boolean.TRUE.equals(hasKey);
+
+        return GraceJSONResult.ok(needShowBubble);
+    }
+
+    @PostMapping("/clearNotify")
+    public GraceJSONResult clearNotify(HttpServletRequest request) {
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
+        Long myId = loginUser.getId();
+        String key = RedisKeys.FRIEND_REQUEST_NOTIFY + myId;
+        stringRedisTemplate.delete(key);
+        return GraceJSONResult.ok();
+    }
 }

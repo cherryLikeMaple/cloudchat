@@ -55,6 +55,12 @@ public class ChatController {
         return GraceJSONResult.ok(stringRedisTemplate.opsForValue().get(key));
     }
 
+    /**
+     * 清理消息(已读)
+     * @param request
+     * @param senderId
+     * @return
+     */
     @PostMapping("/clearMyUnReadCounts")
     public GraceJSONResult clearMyUnReadCounts(HttpServletRequest request, Long senderId) {
         Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));

@@ -9,15 +9,21 @@ import com.cherry.ws.MsgType;
 import com.cherry.ws.WsChatSendReq;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 /**
  * @author cherry
  */
+@Component
 public class ManageUtils {
 
-    public static WsChatMsgVO dtoToVo(WsChatSendReq req) {
+    @Value("${my.base-url}")
+    private String baseUrl;
+
+    public WsChatMsgVO dtoToVo(WsChatSendReq req) {
 
         WsChatMsgVO vo = new WsChatMsgVO();
 
@@ -67,10 +73,10 @@ public class ManageUtils {
     /**
      * 处理文本消息的“单发单聊”
      */
-    public static void send(WsChatSendReq req, Long senderId, Channel channel) {
+    public void send(WsChatSendReq req, Long senderId, Channel channel) {
         // 判断是否为拉黑好友.
-        // note 当前体系不是spring cloud, 所以可以是要http工具包. 直接给本地服务发送请求. 
-        GraceJSONResult jsonResult = OkHttpUtil.get("http://127.0.0.1:1000/friendShip/isBlack?myUserId=" + senderId + "&friendId=" + req.getReceiverId());
+        // note 当前体系不是spring cloud, 所以可以是要http工具包. 直接给本地服务发送请求.
+        GraceJSONResult jsonResult = OkHttpUtil.get(baseUrl + "/friendShip/isBlack?myUserId=" + senderId + "&friendId=" + req.getReceiverId());
         boolean isBlack = (boolean) jsonResult.getData();
         if (isBlack) {
             channel.writeAndFlush(new TextWebSocketFrame("对方已将你拉黑或你已经把对方拉黑，无法发送消息"));
@@ -79,7 +85,7 @@ public class ManageUtils {
 
         WsChatMsgVO vo;
         try {
-            vo = ManageUtils.dtoToVo(req);
+            vo = this.dtoToVo(req);
         } catch (Exception e) {
             e.printStackTrace();
             channel.writeAndFlush(new TextWebSocketFrame("消息发送失败，请稍后重试"));

@@ -6,11 +6,16 @@ import jakarta.servlet.http.HttpServletRequest;
  * @author cherry
  */
 public class TokenUtils {
-    /** 从 Authorization: Bearer xxx 里取 token */
     public static String resolveToken(HttpServletRequest request) {
-        String auth = request.getHeader("Authorization");
-        if (auth == null) return null;
-        if (auth.startsWith("Bearer ")) return auth.substring(7);
+        return resolveFromHeader(request.getHeader("Authorization"));
+    }
+
+    /** 直接从字符串 header 里解析，方便 Feign / Controller 使用 */
+    public static String resolveFromHeader(String auth) {
+        if (auth == null || auth.isEmpty()) return null;
+        if (auth.startsWith("Bearer ")) {
+            return auth.substring(7);
+        }
         return auth.trim();
     }
 }

@@ -1,4 +1,5 @@
-
+my:
+  base-url: http://127.0.0.1:1000
 spring:
   rabbitmq:
     host: 127.0.0.1

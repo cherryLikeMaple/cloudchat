@@ -27,11 +27,11 @@
         <version>3.0.13</version>
         <relativePath/>
     </parent>
-    
-<!--    目的是为了保证父工程干净 只会对依赖的管理, 不会引入额外的jar包依赖.-->
+
+    <!--    目的是为了保证父工程干净 只会对依赖的管理, 不会引入额外的jar包依赖.-->
     <dependencyManagement>
         <dependencies>
-<!--            引入微服务 SpringCloud-->
+            <!--            引入微服务 SpringCloud-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -39,7 +39,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-<!--            引入Alibaba组件 -->
+            <!--            引入Alibaba组件 -->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
@@ -47,7 +47,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-<!--                工具类-->
+            <!--                工具类-->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
@@ -59,7 +59,7 @@
                 <artifactId>mysql-connector-j</artifactId>
                 <version>8.3.0</version>
             </dependency>
-<!--            对象存储-->
+            <!--            对象存储-->
             <dependency>
                 <groupId>io.minio</groupId>
                 <artifactId>minio</artifactId>
@@ -87,5 +87,5 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
+    
 </project>

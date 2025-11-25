@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cherry.api.feign.UserInfoMicroServiceFeign;
+import com.cherry.constant.RedisKeys;
 import com.cherry.dto.user.AddUsersRequest;
 import com.cherry.enums.FriendRequestVerifyStatus;
 import com.cherry.enums.YesOrNo;
@@ -23,6 +24,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +54,8 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
     private FriendshipMapper friendshipMapper;
     @Resource
     private UserInfoMicroServiceFeign userInfoMicroServiceFeign;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public void validFriendRequest(FriendRequest friendRequest) {
@@ -69,10 +73,12 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
     }
 
     @Override
+    @Transactional
     public void addFriendRequest(AddUsersRequest addUsersRequest) {
         // 先删除以前的记录
         QueryWrapper<FriendRequest> friendRequestQueryWrapper = new QueryWrapper<>();
-        friendRequestQueryWrapper.eq("friend_id", addUsersRequest.getFriendId())
+        Long friendId = addUsersRequest.getFriendId();
+        friendRequestQueryWrapper.eq("friend_id", friendId)
                 .eq("my_id", addUsersRequest.getMyId());
         friendRequestMapper.delete(friendRequestQueryWrapper);
 
@@ -80,6 +86,10 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
         FriendRequest friendRequest = new FriendRequest();
         BeanUtils.copyProperties(addUsersRequest, friendRequest);
         friendRequest.setVerifyStatus(FriendRequestVerifyStatus.WAIT.type);
+        
+        // 用redis存储消息 验证消息.
+        String key = RedisKeys.FRIEND_REQUEST_NOTIFY + friendId;
+        stringRedisTemplate.opsForValue().set(key, "1");
         
         friendRequestMapper.insert(friendRequest);
     }

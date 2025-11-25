@@ -7,12 +7,15 @@ CREATE DATABASE cloudchat
 
 use cloudchat;
 
+DROP TABLE IF EXISTS `users`;
 create table users
 (
     id               bigint auto_increment comment 'id'
         primary key,
+    wechat_num       varchar(64)                            null comment '微信号',
     account          varchar(64)                            not null comment '登录账号（唯一）',
     password         varchar(128)                           not null comment '密码（加密存储）',
+    wechat_num_img   varchar(256)                           null comment '微信号二维码',
     mobile           varchar(11)                            null comment '手机号',
     nickname         varchar(16)                            null comment '昵称',
     real_name        varchar(16) charset utf8mb4            null comment '真实姓名',
@@ -24,6 +27,8 @@ create table users
     province         varchar(32)                            null comment '省份',
     city             varchar(32)                            null comment '城市',
     district         varchar(32)                            null comment '区县',
+    chat_bg          varchar(256)                           null comment '聊天背景',
+    friend_circle_bg varchar(256)                           null comment '朋友圈背景图',
     signature        varchar(128)                           null comment '我的一句话签名',
     user_role        varchar(256) default 'user'            not null comment '用户角色：user/admin/ban',
     edit_time        datetime     default CURRENT_TIMESTAMP not null comment '编辑时间',
@@ -32,6 +37,8 @@ create table users
     is_delete        tinyint      default 0                 not null comment '是否删除'
 )
     comment '用户表';
+
+
 
 
 DROP TABLE IF EXISTS `friendship`;

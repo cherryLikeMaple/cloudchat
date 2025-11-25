@@ -38,11 +38,11 @@ public class IPLimitFilter implements GlobalFilter, Ordered {
     @Resource
     private RedisTemplate redisTemplate;
 
-    @Value("${blackIp.continueCounts}")
+    @Value("${blackIp.continueCounts:120}")
     private Integer continueCounts;
-    @Value("${blackIp.timeInterval}")
+    @Value("${blackIp.timeInterval:60}")
     private Integer timeInterval;
-    @Value("${blackIp.limitTimes}")
+    @Value("${blackIp.limitTimes:120}")
     private Integer limitTimes;
 
     /**

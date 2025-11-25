@@ -88,7 +88,7 @@ public class PassportController {
      * @return
      */
     @PostMapping("/logout")
-    public GraceJSONResult logout(@RequestBody HttpServletRequest request) {
+    public GraceJSONResult logout(HttpServletRequest request) {
         boolean result = usersService.logout(request);
         return GraceJSONResult.ok(result);
     }
@@ -99,7 +99,7 @@ public class PassportController {
      * @return
      */
     @PostMapping("/logoutAll")
-    public GraceJSONResult logoutAll(@RequestBody HttpServletRequest request) {
+    public GraceJSONResult logoutAll( HttpServletRequest request) {
         boolean result = usersService.logoutAll(request);
         return GraceJSONResult.ok(result);
     }
