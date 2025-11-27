@@ -19,7 +19,7 @@ import com.cherry.vo.FriendshipVo;
 public interface FriendCircleService extends IService<FriendCircle> {
 
     /**
-     * 发布朋友去
+     * 发布朋友圈
      *
      * @param createFriendCircleDTO
      */
@@ -36,7 +36,7 @@ public interface FriendCircleService extends IService<FriendCircle> {
     Page<FriendCircleVO> listFriendCircleByUser(Long loginUserId, Long friendId, Integer currentPage, Integer pageSize);
 
     /**
-     * 查看我的素有好友的朋友圈
+     * 查看我的所有好友的朋友圈
      *
      * @param loginUserId
      * @param currentPage
@@ -59,5 +59,6 @@ public interface FriendCircleService extends IService<FriendCircle> {
      * @param friendCircleVO
      */
     void batchSetCircleLiked(Long circleId, Long loginUserId, FriendCircleVO friendCircleVO);
+    
     
 }

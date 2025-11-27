@@ -86,12 +86,13 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
         FriendRequest friendRequest = new FriendRequest();
         BeanUtils.copyProperties(addUsersRequest, friendRequest);
         friendRequest.setVerifyStatus(FriendRequestVerifyStatus.WAIT.type);
+        friendRequestMapper.insert(friendRequest);
         
         // 用redis存储消息 验证消息.
         String key = RedisKeys.FRIEND_REQUEST_NOTIFY + friendId;
         stringRedisTemplate.opsForValue().set(key, "1");
         
-        friendRequestMapper.insert(friendRequest);
+
     }
 
     @Override

@@ -132,7 +132,6 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
 
             Long id = usersQueryRequest.getId();
             String account = usersQueryRequest.getAccount();
-            String mobile = usersQueryRequest.getMobile();
             String nickname = usersQueryRequest.getNickname();
             String realName = usersQueryRequest.getRealName();
             Integer sex = usersQueryRequest.getSex();
@@ -149,7 +148,6 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
             // 构造查询条件
             usersQueryWrapper.eq(id != null, "id", id);
             usersQueryWrapper.eq(StringUtils.isNotBlank(account), "account", account);
-            usersQueryWrapper.eq(StringUtils.isNotBlank(mobile), "mobile", mobile);
             usersQueryWrapper.eq(sex != null, "sex", sex);
             usersQueryWrapper.eq(StringUtils.isNotBlank(country), "country", country);
             usersQueryWrapper.eq(StringUtils.isNotBlank(province), "province", province);

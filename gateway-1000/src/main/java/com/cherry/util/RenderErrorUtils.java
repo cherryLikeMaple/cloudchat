@@ -43,7 +43,7 @@ public class RenderErrorUtils {
         }
 
         // 4. 修改response的状态码code为500
-        response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+        response.setStatusCode(HttpStatus.OK);
 
         // 5. 转换json并且像response中写入数据
         String resultJson = new Gson().toJson(jsonResult);

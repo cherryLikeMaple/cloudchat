@@ -52,6 +52,7 @@ public class UserController {
 
     /**
      * 返回用户的vo类型.
+     *
      * @param userId
      * @return
      */
@@ -69,12 +70,12 @@ public class UserController {
     @GetMapping("/get/login")
     public GraceJSONResult getLoginUser(HttpServletRequest request) {
         Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
-        return GraceJSONResult.ok(loginUser);
+        return GraceJSONResult.ok(usersService.getUserVo(loginUser));
     }
 
 
     /**
-     * 通过手机号或者账号查询好友
+     * 账号或者昵称查询好友
      *
      * @param request
      * @param usersQueryRequest
@@ -84,13 +85,13 @@ public class UserController {
     public GraceJSONResult queryFriend(HttpServletRequest request, @RequestBody UsersQueryRequest usersQueryRequest) {
         Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
         String account = usersQueryRequest.getAccount();
-        String mobile = usersQueryRequest.getMobile();
 
-        if (StringUtils.isAllBlank(account, mobile)) {
+        if (StringUtils.isAllBlank(account)) {
             GraceException.display(ResponseStatusEnum.PARAMS_NULL);
         }
         LambdaQueryWrapper<Users> usersLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        usersLambdaQueryWrapper.eq(Users::getAccount, account).or().eq(Users::getMobile, mobile);
+        usersLambdaQueryWrapper.eq(Users::getAccount, account).or().eq(Users::getRealName, usersQueryRequest.getRealName())
+                .or().eq(Users::getNickname, usersQueryRequest.getNickname());
         Users friend = usersService.getOne(usersLambdaQueryWrapper, false);
         if (friend == null) {
             return GraceJSONResult.errorCustom(ResponseStatusEnum.FRIEND_NOT_EXIST_ERROR);

@@ -18,7 +18,7 @@ import static com.cherry.grace.result.ResponseStatusEnum.PARAMS_NULL;
  * @author cherry
  */
 @RestController
-@RequestMapping("/passport")
+@RequestMapping("/auth")
 public class PassportController {
 
 

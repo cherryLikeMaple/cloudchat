@@ -23,11 +23,6 @@ public class UsersQueryRequest extends PageRequest implements Serializable {
     private String account;
 
     /**
-     * 手机号
-     */
-    private String mobile;
-
-    /**
      * 昵称
      */
     private String nickname;

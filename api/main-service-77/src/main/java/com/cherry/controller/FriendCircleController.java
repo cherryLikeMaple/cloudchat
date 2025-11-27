@@ -58,6 +58,7 @@ public class FriendCircleController {
                 friendCircleService.listAllFriendCircle(loginUserId, page, pageSize)
         );
     }
+    
 
     /**
      * 查看：某一个好友的朋友圈（分页）

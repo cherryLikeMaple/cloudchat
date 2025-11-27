@@ -46,7 +46,7 @@ public class SecurityFilterToken implements GlobalFilter, Ordered {
     private RedisTemplate redisTemplate;
 
     private static final List<String> WHITE = List.of(
-            "/passport/login", "/passport/register", "/friendShip/isBlack",
+            "/auth/login", "/auth/register", "/friendShip/isBlack",
             // 网关剥前缀的情况
             "/v3/api-docs", "/v3/api-docs/**",
             // 带服务前缀的情况
@@ -65,32 +65,32 @@ public class SecurityFilterToken implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String url = exchange.getRequest().getURI().getPath();
         for (String white : WHITE) {
-            //如果匹配到, 放行
+            // 白名单，直接放行
             if (antPathMatcher.match(white, url)) {
                 return chain.filter(exchange);
             }
         }
 
-        //到达此处, 说明代码被拦截了
         ServerHttpRequest request = exchange.getRequest();
         HttpHeaders headers = request.getHeaders();
         String auth = headers.getFirst("Authorization");
         if (auth == null) {
+            // 未登录
             return RenderErrorUtils.display(exchange, ResponseStatusEnum.UN_LOGIN);
         }
+
         if (auth.startsWith("Bearer ")) {
             auth = auth.substring(7);
         }
         String token = auth.trim();
         String tokenKey = RedisKeys.LOGIN_TOKEN + token;
         String userId = (String) redisTemplate.opsForValue().get(tokenKey);
-        if (userId == null) {
-            GraceException.display(USER_NOT_EXIST_ERROR);
-        } else {
-            return chain.filter(exchange);
-        }
 
-        return RenderErrorUtils.display(exchange, ResponseStatusEnum.UN_LOGIN);
+        if (userId == null) {
+            return RenderErrorUtils.display(exchange, ResponseStatusEnum.TICKET_INVALID);
+        }
+        
+        return chain.filter(exchange);
     }
 
 

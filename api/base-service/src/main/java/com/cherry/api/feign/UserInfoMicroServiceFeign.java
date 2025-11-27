@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient(value = "auth-service")
 public interface UserInfoMicroServiceFeign {
 
-    @GetMapping("/passport/internal/user/me")
+    @GetMapping("/auth/internal/user/me")
     Users getLoginUser(@RequestHeader("Authorization") String authorization);
     
     

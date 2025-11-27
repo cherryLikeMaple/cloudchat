@@ -28,6 +28,8 @@ public class FriendShipController {
     @Resource
     private UserInfoMicroServiceFeign userInfoMicroServiceFeign;
 
+    
+    
     /**
      * 根据id得到单个好友关系
      *
@@ -52,7 +54,7 @@ public class FriendShipController {
      * @param request
      * @return
      */
-    @GetMapping("/friends/all/vo")
+    @GetMapping("/friends/vo")
     public GraceJSONResult listAll(@RequestParam(defaultValue = "1", name = "currentPage") Long currentPage,
                                    @RequestParam(defaultValue = "5", name = "pageSize") Long pageSize,
                                    HttpServletRequest request) {
@@ -67,7 +69,7 @@ public class FriendShipController {
      * @param request
      * @return
      */
-    @GetMapping("/friends/vo")
+    @GetMapping("/friends/normal/vo")
     public GraceJSONResult listFriends(@RequestParam Long currentPage,
                                        @RequestParam Long pageSize,
                                        HttpServletRequest request) {
@@ -91,28 +93,28 @@ public class FriendShipController {
         return GraceJSONResult.ok(page);
     }
 
-    /**
-     * 更新备注
-     *
-     * @param request
-     * @param friendId
-     * @param remark
-     * @return
-     */
-    // note 下面这俩个基本是差不多的功能, 但是拆分为俩个接口, 可以实现业务解耦, 防止并发高同时打在一个接口上
-    // note service 可以不用进行拆分. 
-    @PostMapping("/updateFriendRemark")
-    public GraceJSONResult updateFriendRemark(HttpServletRequest request, Long friendId, String remark) {
-        if (friendId == null) {
-            GraceException.display(ResponseStatusEnum.PARAMS_NULL);
+        /**
+         * 更新备注
+         *
+         * @param request
+         * @param friendId
+         * @param remark
+         * @return
+         */
+        // note 下面这俩个基本是差不多的功能, 但是拆分为俩个接口, 可以实现业务解耦, 防止并发高同时打在一个接口上
+        // note service 可以不用进行拆分. 
+        @PostMapping("/updateFriendRemark")
+        public GraceJSONResult updateFriendRemark(HttpServletRequest request, Long friendId, String remark) {
+            if (friendId == null) {
+                GraceException.display(ResponseStatusEnum.PARAMS_NULL);
+            }
+            if (StringUtils.isBlank(remark)) {
+                GraceException.display(ResponseStatusEnum.PARAMS_NULL);
+            }
+            Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
+            friendshipService.updateFriendRemark(loginUser.getId(), friendId, remark);
+            return GraceJSONResult.ok();
         }
-        if (StringUtils.isBlank(remark)) {
-            GraceException.display(ResponseStatusEnum.PARAMS_NULL);
-        }
-        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
-        friendshipService.updateFriendRemark(loginUser.getId(), friendId, remark);
-        return GraceJSONResult.ok();
-    }
 
     /**
      * 加入黑名单
