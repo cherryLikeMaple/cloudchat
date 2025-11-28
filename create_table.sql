@@ -40,14 +40,13 @@ create table users
 
 
 
-
 DROP TABLE IF EXISTS `friendship`;
 CREATE TABLE `friendship`
 (
     `id`            varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     `my_id`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '自己的用户id',
     `friend_id`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '我朋友的id',
-    `friend_remark` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '好友的备注名',
+    `friend_remark` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '好友的备注名',
     `is_msg_ignore` int                                                          NOT NULL COMMENT '是否消息免打扰，0-打扰，不忽略消息(默认)；1-免打扰，忽略消息',
     `is_black`      int                                                          NOT NULL COMMENT '是否拉黑，0-好友(默认)；1-已拉黑',
     `create_time`   datetime default CURRENT_TIMESTAMP                           not null comment '创建时间',
@@ -65,7 +64,7 @@ CREATE TABLE `friend_request`
     `id`             varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci                            NOT NULL,
     `my_id`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci                            NOT NULL COMMENT '添加好友，发起请求的用户id',
     `friend_id`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci                            NOT NULL COMMENT '要添加的朋友的id',
-    `friend_remark`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci                            NOT NULL COMMENT '好友的备注名',
+    `friend_remark`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '好友的备注名',
     `verify_message` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '请求的留言，验证消息',
     `verify_status`  int                                                                                     NOT NULL COMMENT '请求被好友审核的状态，0-待审核；1-已添加，2-已过期',
     `request_time`   datetime                                                      default CURRENT_TIMESTAMP not null comment '创建时间',
@@ -78,12 +77,13 @@ CREATE TABLE `friend_request`
 DROP TABLE IF EXISTS `friend_circle`;
 CREATE TABLE `friend_circle`
 (
-    `id`          bigint   NOT NULL AUTO_INCREMENT COMMENT '主键id',
-    `user_id`     bigint   NOT NULL COMMENT '发朋友圈的用户id',
-    `words`       varchar(256)      DEFAULT NULL COMMENT '文字内容',
-    `images`      varchar(2560)     DEFAULT NULL COMMENT '图片内容，url用逗号分割',
-    `video`       varchar(256)      DEFAULT NULL COMMENT '视频url',
-    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `id`            bigint   NOT NULL AUTO_INCREMENT COMMENT '主键id',
+    `user_id`       bigint   NOT NULL COMMENT '发朋友圈的用户id',
+    `words`         varchar(256)      DEFAULT NULL COMMENT '文字内容',
+    `images`        varchar(2560)     DEFAULT NULL COMMENT '图片内容，url用逗号分割',
+    `video`         varchar(256)      DEFAULT NULL COMMENT '视频url',
+    `visible_scope` tinyint  NOT NULL DEFAULT 1 COMMENT '可见范围：0=仅自己可见 1=好友可见 2=所有人可见',
+    `create_time`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -132,26 +132,26 @@ CREATE TABLE `comment`
 DROP TABLE IF EXISTS `chat_message`;
 CREATE TABLE `chat_message`
 (
-    `id`                   bigint      NOT NULL AUTO_INCREMENT COMMENT '主键id',
-    `msg_id`               varchar(64) not null comment '前端生成的消息ID（用于去重和状态同步）',
-    `sender_id`            bigint      NOT NULL COMMENT '发送者用户id',
-    `receiver_id`          bigint      NOT NULL COMMENT '接收者id（用户或群）',
-    `chat_type`        tinyint     NOT NULL                     DEFAULT 1 COMMENT '接收者类型：1=用户，2=群组',
-    `content`                  varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '文本消息内容',
-    `msg_type`             tinyint     NOT NULL COMMENT '消息类型：1=文本，2=图片，3=视频，4=语音等',
-    `chat_time`            datetime    NOT NULL COMMENT '消息时间（发送/接收时间）',
+    `id`              bigint      NOT NULL AUTO_INCREMENT COMMENT '主键id',
+    `msg_id`          varchar(64) not null comment '前端生成的消息ID（用于去重和状态同步）',
+    `sender_id`       bigint      NOT NULL COMMENT '发送者用户id',
+    `receiver_id`     bigint      NOT NULL COMMENT '接收者id（用户或群）',
+    `chat_type`       tinyint     NOT NULL                     DEFAULT 1 COMMENT '接收者类型：1=用户，2=群组',
+    `content`         varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '文本消息内容',
+    `msg_type`        tinyint     NOT NULL COMMENT '消息类型：1=文本，2=图片，3=视频，4=语音等',
+    `chat_time`       datetime    NOT NULL COMMENT '消息时间（发送/接收时间）',
 
-    `video_cover_url`      varchar(256) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '视频封面地址',
-    `media_url`           varchar(256) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '视频地址',
-    `media_width`          int                                      DEFAULT NULL COMMENT '视频宽度',
-    `media_height`         int                                      DEFAULT NULL COMMENT '视频高度',
-    `video_times`          int                                      DEFAULT NULL COMMENT '视频时长（秒）',
+    `video_cover_url` varchar(256) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '视频封面地址',
+    `media_url`       varchar(256) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '视频地址',
+    `media_width`     int                                      DEFAULT NULL COMMENT '视频宽度',
+    `media_height`    int                                      DEFAULT NULL COMMENT '视频高度',
+    `video_times`     int                                      DEFAULT NULL COMMENT '视频时长（秒）',
 
-    `voice_url`           varchar(256) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '语音地址',
-    `voice_duration` int                                      DEFAULT NULL COMMENT '语音时长（秒）',
+    `voice_url`       varchar(256) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '语音地址',
+    `voice_duration`  int                                      DEFAULT NULL COMMENT '语音时长（秒）',
 
-    `is_read`              tinyint(1)  NOT NULL                     DEFAULT 0 COMMENT '是否已读：0=未读，1=已读',
-    `is_delete`            tinyint(1)  NOT NULL                     DEFAULT 0 COMMENT '是否删除：0=否，1=是',
+    `is_read`         tinyint(1)  NOT NULL                     DEFAULT 0 COMMENT '是否已读：0=未读，1=已读',
+    `is_delete`       tinyint(1)  NOT NULL                     DEFAULT 0 COMMENT '是否删除：0=否，1=是',
 
     PRIMARY KEY (`id`) USING BTREE,
     KEY `idx_sender_receiver_time` (`sender_id`, `receiver_id`, `chat_time`),

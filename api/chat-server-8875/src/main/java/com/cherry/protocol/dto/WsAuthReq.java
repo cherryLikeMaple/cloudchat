@@ -17,12 +17,13 @@ public class WsAuthReq {
     private String token;
 
     /**
-     * 端类型：web / ios / android / pc 等
+     * 客户端类型 code
+     * 建议值：web / ios / android / pc / mini_program
      */
-    private ClientType clientType;
+    private String clientType;
 
     /**
-     * 设备唯一标识：前端生成并缓存（localStorage）
+     * 设备唯一标识：前端生成并缓存
      */
     private String deviceId;
 }

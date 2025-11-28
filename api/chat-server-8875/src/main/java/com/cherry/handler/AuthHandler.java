@@ -3,6 +3,7 @@ package com.cherry.handler;
 import cn.hutool.json.JSONUtil;
 import com.cherry.constant.RedisKeys;
 import com.cherry.protocol.dto.WsAuthReq;
+import com.cherry.protocol.enums.ClientType;
 import com.cherry.session.WsChannelManager;
 import com.cherry.session.WsSession;
 import io.netty.channel.Channel;
@@ -80,8 +81,30 @@ public class AuthHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
         }
 
         // 4. 绑定会话（关键：这里真正调用 bindSession）
+        String clientTypeCode  = authReq.getClientType();
+        if (clientTypeCode == null) {
+            channel.writeAndFlush(new TextWebSocketFrame("缺少 clientType"));
+            channel.close();
+            return;
+        }
 
-        WsChannelManager.bindSession(channel, userId, authReq.getClientType().getCode(), authReq.getDeviceId(), authReq.getToken());
+        clientTypeCode = clientTypeCode.toLowerCase();
+        
+        ClientType clientType = ClientType.getByCode(clientTypeCode);
+        if (clientType == null) {
+            channel.writeAndFlush(new TextWebSocketFrame("非法的 clientType: " + clientTypeCode));
+            channel.close();
+            return;
+        }
+
+        // 5. 真正绑定会话
+        WsChannelManager.bindSession(
+                channel,
+                userId,
+                clientType.getCode(),    
+                authReq.getDeviceId(),
+                authReq.getToken()
+        );
 
         // 5. 给前端一个简单确认
         channel.writeAndFlush(new TextWebSocketFrame("AUTH_OK"));

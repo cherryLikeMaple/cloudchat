@@ -84,14 +84,15 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
 
         // 再新增记录
         FriendRequest friendRequest = new FriendRequest();
+        friendRequest.setRequestTime(LocalDateTime.now());
         BeanUtils.copyProperties(addUsersRequest, friendRequest);
         friendRequest.setVerifyStatus(FriendRequestVerifyStatus.WAIT.type);
         friendRequestMapper.insert(friendRequest);
-        
+
         // 用redis存储消息 验证消息.
         String key = RedisKeys.FRIEND_REQUEST_NOTIFY + friendId;
         stringRedisTemplate.opsForValue().set(key, "1");
-        
+
 
     }
 
@@ -101,7 +102,7 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
                                                         HttpServletRequest request) {
         // 1. 当前登录用户
         Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
-        Long myId = loginUser.getId(); 
+        Long myId = loginUser.getId();
 
         // 2. 构造分页参数
         Page<FriendRequest> page = new Page<>(currentPage, pageSize);
@@ -121,7 +122,7 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
 
         // 4. 收集所有“申请人 id”（my_id 才是申请人）
         Set<Long> applicantIds = friendRequests.stream()
-                .map(FriendRequest::getMyId)  
+                .map(FriendRequest::getMyId)
                 .collect(Collectors.toSet());
 
         // 5. 批量查用户信息（申请人的用户信息）
@@ -138,7 +139,8 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
                 .map(req -> {
                     FriendRequestVo vo = new FriendRequestVo();
                     BeanUtils.copyProperties(req, vo);
-
+                    vo.setCreateTime(req.getRequestTime());
+                    vo.setVerifyMsg(req.getVerifyMessage());
                     // 申请人信息
                     UserVo applicantUser = userVoMap.get(req.getMyId());
                     vo.setFriendUser(applicantUser);
@@ -228,7 +230,7 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
         if (friendRequest == null) {
             GraceException.display(ResponseStatusEnum.PARAMS_NULL);
         }
-        FriendRequestVo friendRequestVo = new FriendRequestVo();    
+        FriendRequestVo friendRequestVo = new FriendRequestVo();
         BeanUtils.copyProperties(friendRequest, friendRequestVo);
         Long friendId = friendRequestVo.getFriendId();
         Users friendUser = usersService.getById(friendId);

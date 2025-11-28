@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cherry.dto.friendCycle.CreateFriendCircleDTO;
+import com.cherry.enums.VisibleScopeEnum;
 import com.cherry.exceptions.GraceException;
 import com.cherry.grace.result.ResponseStatusEnum;
 import com.cherry.mapper.FriendCircleMapper;
@@ -19,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -54,6 +56,7 @@ public class FriendCircleServiceImpl extends ServiceImpl<FriendCircleMapper, Fri
         FriendCircle friendCircle = new FriendCircle();
         friendCircle.setUserId(userId);
         friendCircle.setWords(createFriendCircleDTO.getWords());
+        friendCircle.setVisibleScope(createFriendCircleDTO.getVisibleScope());
         // 图片list -> 逗号分割
         if (createFriendCircleDTO.getImages() != null &&
                 !createFriendCircleDTO.getImages().isEmpty()) {
@@ -63,6 +66,9 @@ public class FriendCircleServiceImpl extends ServiceImpl<FriendCircleMapper, Fri
             friendCircle.setImages(images);
         }
         friendCircle.setVideo(createFriendCircleDTO.getVideo());
+
+        // 设置时间
+        friendCircle.setCreateTime(LocalDateTime.now());
 
         // 2.保存
         boolean result = this.save(friendCircle);
@@ -136,6 +142,30 @@ public class FriendCircleServiceImpl extends ServiceImpl<FriendCircleMapper, Fri
             friendCircleVO.setLikedUserList(likedUsers);
             friendCircleVO.setLikeCount(likedUsers.size());
         }
+    }
+
+    @Override
+    public Page<FriendCircleVO> listAllCircle(Long loginUserId, Integer currentPage, Integer pageSize) {
+        Page<FriendCircle> friendCirclePage = new Page<>(currentPage, pageSize);
+        LambdaQueryWrapper<FriendCircle> wrapper = new LambdaQueryWrapper<>();
+
+        wrapper
+                .eq(FriendCircle::getVisibleScope, VisibleScopeEnum.PUBLIC.getCode())
+                .or()
+                .eq(FriendCircle::getUserId, loginUserId)
+                // 时间倒序
+                .orderByDesc(FriendCircle::getCreateTime);
+        this.page(friendCirclePage, wrapper);
+
+        // 组装 VO
+        List<FriendCircleVO> voList = buidlVoList(friendCirclePage.getRecords(), loginUserId);
+
+        // 把分页结果转成 Page<FriendCircleVO>
+        Page<FriendCircleVO> voPage = new Page<>(currentPage, pageSize);
+        voPage.setTotal(friendCirclePage.getTotal());
+        voPage.setRecords(voList);
+
+        return voPage;
     }
 
     @Override

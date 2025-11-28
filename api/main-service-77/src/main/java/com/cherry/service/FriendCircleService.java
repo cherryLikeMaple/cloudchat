@@ -59,6 +59,12 @@ public interface FriendCircleService extends IService<FriendCircle> {
      * @param friendCircleVO
      */
     void batchSetCircleLiked(Long circleId, Long loginUserId, FriendCircleVO friendCircleVO);
-    
-    
+
+    /**
+     * 返回当前网站的所有朋友圈
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    Page<FriendCircleVO> listAllCircle(Long loginUserId, Integer currentPage, Integer pageSize);
 }

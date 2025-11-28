@@ -83,11 +83,11 @@ public class FriendshipServiceImpl extends ServiceImpl<FriendshipMapper, Friends
         // 2.构造分页参数
         Page<Friendship> page = new Page<>(currentPage, pageSize);
 
-        // 3.查找我的好友（带黑名单条件）
+        // 3.查找我的好友（不带黑名单条件）
         LambdaQueryWrapper<Friendship> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Friendship::getMyId, myId)
+        wrapper.eq(Friendship::getMyId, myId);
                 // 只有 isBlack 不为 null 时才拼 is_black 条件
-                .eq(isBlack != null, Friendship::getIsBlack, isBlack);
+//                .eq(isBlack != null, Friendship::getIsBlack, isBlack);
 
         Page<Friendship> myFriendsPage = this.page(page, wrapper);
         List<Friendship> myFriends = myFriendsPage.getRecords();

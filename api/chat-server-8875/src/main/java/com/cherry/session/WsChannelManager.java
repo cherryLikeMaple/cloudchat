@@ -88,6 +88,7 @@ public class WsChannelManager {
 
     /**
      * 返回连接数量
+     *
      * @return
      */
     public static int getSessionSize() {
@@ -108,7 +109,7 @@ public class WsChannelManager {
 
     /**
      * 给某个用户所有端发消息（排除当前这个 channel）
-     *   - 比如自己在 web 端发了一条，想同步给自己手机/平板，但没必要再推给当前 web 端
+     * - 比如自己在 web 端发了一条，想同步给自己手机/平板，但没必要再推给当前 web 端
      */
     public static void sendToUserExceptChannel(Long userId, Channel excludeChannel, String json) {
         for (WsSession session : getUserSessions(userId)) {

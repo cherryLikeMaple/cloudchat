@@ -9,12 +9,13 @@
         <result column="words" property="words" />
         <result column="images" property="images" />
         <result column="video" property="video" />
+        <result column="visible_scope" property="visibleScope"/>
         <result column="create_time" property="createTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, words, images, video, create_time
+        id, user_id, words, images, video,  visible_scope, create_time
     </sql>
 
 </mapper>

@@ -45,6 +45,23 @@ public class FriendCircleController {
     /**
      * 查看：我 + 我所有好友 的朋友圈（分页）
      */
+    @GetMapping("/listMyAll")
+    public GraceJSONResult listMyAll(@RequestParam Integer page,
+                                     @RequestParam Integer pageSize,
+                                     HttpServletRequest request) {
+
+        // 当前登录用户
+        Users loginUser = userInfoMicroServiceFeign.getLoginUser(request.getHeader("Authorization"));
+        Long loginUserId = loginUser.getId();
+
+        return GraceJSONResult.ok(
+                friendCircleService.listAllFriendCircle(loginUserId, page, pageSize)
+        );
+    }
+
+    /**
+     * 查看：所有人朋友圈 类似广场
+     */
     @GetMapping("/listAll")
     public GraceJSONResult listAll(@RequestParam Integer page,
                                    @RequestParam Integer pageSize,
@@ -55,10 +72,10 @@ public class FriendCircleController {
         Long loginUserId = loginUser.getId();
 
         return GraceJSONResult.ok(
-                friendCircleService.listAllFriendCircle(loginUserId, page, pageSize)
+                friendCircleService.listAllCircle(loginUserId, page, pageSize)
         );
     }
-    
+
 
     /**
      * 查看：某一个好友的朋友圈（分页）

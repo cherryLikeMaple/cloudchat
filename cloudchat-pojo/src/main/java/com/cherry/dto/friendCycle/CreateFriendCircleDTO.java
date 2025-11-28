@@ -29,4 +29,9 @@ public class CreateFriendCircleDTO implements Serializable {
      * 视频 url（可为空）
      */
     private String video;
+
+    /**
+     * 可见范围：0=仅自己可见 1=好友可见 2=所有人可见
+     */
+    private Integer visibleScope;
 }

@@ -90,7 +90,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_CHAT_MESSAGE,
                 RabbitMQConfig.ROUTING_KEY_CHAT_MESSAGE,
                 msgJson);
-
+        
         switch (msgType) {
             case TEXT:
                 manageUtils.send(req, senderId, channel);

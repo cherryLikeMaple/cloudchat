@@ -1,11 +1,12 @@
 package com.cherry.dist;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONWriter;
 import com.cherry.grace.result.GraceJSONResult;
-import com.cherry.ws.WsChatMsgVO;
 import com.cherry.session.WsChannelManager;
 import com.cherry.utils.OkHttpUtil;
 import com.cherry.ws.MsgType;
+import com.cherry.ws.WsChatMsgVO;
 import com.cherry.ws.WsChatSendReq;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -91,9 +92,16 @@ public class ManageUtils {
             channel.writeAndFlush(new TextWebSocketFrame("消息发送失败，请稍后重试"));
             return;
         }
-
-        String voJson = JSONUtil.toJsonStr(vo);
+        // 原先使用 hutool 转 json的方法, 但是导致精度丢失
+//        String voJson = JSONUtil.toJsonStr(vo);
+        
+        // 替换为fastjson2 
+        String voJson = JSON.toJSONString(vo,
+                JSONWriter.Feature.WriteLongAsString,
+                JSONWriter.Feature.WriteNulls);
+        
         Long receiverId = vo.getReceiverId();
+        
 
         // 推给对方所有端
         WsChannelManager.sendToUser(receiverId, voJson);
